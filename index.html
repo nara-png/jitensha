@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f5fae">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="自転車ルール">
+<title>日本の自転車ルール 研修｜株式会社ミストラルサービス</title>
+<style>
+:root{
+  --bg:#f3f6fa; --card:#fff; --ink:#1d2733; --sub:#5b6878; --line:#d6dee8;
+  --pri:#1f5fae; --pri2:#e8f0fb; --ok:#14843b; --okbg:#e6f6ec; --ng:#c62828; --ngbg:#fdecec; --warn:#b26a00; --warnbg:#fff5e0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Yu Gothic UI","Meiryo","Myanmar Text","Noto Sans Myanmar",sans-serif;font-size:16px;line-height:1.6}
+.my{font-family:"Myanmar Text","Noto Sans Myanmar","Padauk",sans-serif;line-height:1.9}
+button{font:inherit;cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--pri);color:#fff;display:flex;align-items:center;gap:10px;padding:8px 16px;flex-wrap:wrap}
+header h1{font-size:18px;margin:0;flex:1;min-width:200px}
+header h1 small{display:block;font-size:12px;font-weight:400;opacity:.9}
+.hbtn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.6);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;color:#fff;border:0;padding:6px 10px}
+.seg button.on{background:#fff;color:var(--pri);font-weight:700}
+main{max-width:980px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font-size:18px;margin:0 0 10px}
+h3{font-size:16px;margin:14px 0 8px}
+.muted{color:var(--sub);font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=text]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;min-width:220px}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700}
+.btn.sub{background:#fff;color:var(--pri);border:1px solid var(--pri)}
+.btn.gray{background:#eef1f5;color:var(--ink);border:1px solid var(--line);font-weight:400}
+.btn:disabled{opacity:.45;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.cat{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbfcfe}
+.cat .t{font-weight:700}
+.cat .sets{display:flex;gap:6px;margin-top:8px}
+.setb{flex:1;border:1px solid var(--pri);background:#fff;color:var(--pri);border-radius:8px;padding:6px 4px;font-size:14px;line-height:1.3}
+.setb small{display:block;font-size:12px;color:var(--sub)}
+.setb.pass{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.setb.fail{background:var(--warnbg);border-color:var(--warn);color:var(--warn)}
+.final{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.finalb{border:2px solid var(--pri);background:var(--pri2);border-radius:12px;padding:12px;text-align:left}
+.finalb b{font-size:17px}
+.finalb.pass{border-color:var(--ok);background:var(--okbg)}
+.finalb.fail{border-color:var(--warn);background:var(--warnbg)}
+.voice{font-size:13px;padding:6px 10px;border-radius:8px;background:var(--pri2);color:var(--pri)}
+.voice.warn{background:var(--warnbg);color:var(--warn)}
+/* 問題画面 */
+.qtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.qtop .lbl{font-weight:700}
+.timer{margin-left:auto;font-weight:700;font-size:18px;padding:4px 12px;border-radius:8px;background:var(--pri2);color:var(--pri)}
+.timer.low{background:var(--ngbg);color:var(--ng)}
+.bar{height:8px;background:#e3e8ef;border-radius:4px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--pri)}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.qno{font-size:14px;color:var(--sub)}
+.qbody{display:flex;gap:16px;align-items:flex-start;margin:6px 0 12px}
+.sign{flex:0 0 120px;width:120px;height:120px}
+.sign svg{width:100%;height:100%}
+.qtext{flex:1;font-size:20px}
+.qtext .ja{font-weight:600}
+.qtext .my{font-size:19px;color:#253d63;margin-top:6px}
+.both .qtext .my{border-top:1px dashed var(--line);padding-top:6px}
+.ox{display:flex;gap:14px;margin:8px 0}
+.ox button{flex:1;font-size:52px;font-weight:700;padding:10px 0;border-radius:14px;border:3px solid var(--line);background:#fff;line-height:1.1}
+.ox button small{display:block;font-size:13px;font-weight:400;color:var(--sub)}
+.ox .o{color:#1565c0}.ox .x{color:var(--ng)}
+.ox button.sel{border-color:var(--pri);background:var(--pri2)}
+.ox button.right{border-color:var(--ok);background:var(--okbg)}
+.ox button.wrong{border-color:var(--ng);background:var(--ngbg)}
+.fb{border-radius:12px;padding:12px 14px;margin-top:10px}
+.fb.ok{background:var(--okbg);border:1px solid #9fd5b1}
+.fb.ng{background:var(--ngbg);border:1px solid #f0b3b3}
+.fb .h{font-weight:700;font-size:18px}
+.fb .ex{margin-top:4px}
+.fb .src{font-size:12px;color:var(--sub);margin-top:4px}
+.anbox{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.anbar{flex:0 0 140px;height:6px;background:#dfe5ec;border-radius:3px;overflow:hidden}
+.anbar i{display:block;height:100%;width:0;background:var(--pri)}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:14px;flex-wrap:wrap}
+.spk{background:#fff;border:1px solid var(--pri);color:var(--pri);border-radius:8px;padding:6px 12px}
+.spk.on{background:var(--pri);color:#fff}
+.dots{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px}
+.dots button{width:34px;height:30px;border:1px solid var(--line);background:#fff;border-radius:6px;font-size:13px;padding:0}
+.dots button.done{background:var(--pri2);border-color:var(--pri)}
+.dots button.cur{outline:2px solid var(--pri)}
+/* 結果 */
+.big{font-size:34px;font-weight:800}
+.passb{display:inline-block;padding:4px 16px;border-radius:999px;font-weight:800;font-size:20px}
+.passb.p{background:var(--okbg);color:var(--ok);border:2px solid var(--ok)}
+.passb.f{background:var(--ngbg);color:var(--ng);border:2px solid var(--ng)}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;font-size:14px}
+th{background:#f1f4f8}
+.rate{display:inline-block;height:10px;background:var(--pri);border-radius:5px;vertical-align:middle}
+.res-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.res-item.ng{border-color:#f0b3b3;background:#fffafa}
+.res-item .mk{font-weight:800}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#263238;color:#fff;padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.3s;z-index:50;max-width:90%}
+.toast.on{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;overflow:auto;padding:20px}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:14px;max-width:820px;width:100%;padding:20px}
+.flow{counter-reset:f;padding-left:0;list-style:none}
+.flow li{position:relative;padding:6px 0 6px 40px}
+.flow li:before{counter-increment:f;content:counter(f);position:absolute;left:0;top:6px;width:28px;height:28px;border-radius:50%;background:var(--pri);color:#fff;text-align:center;line-height:28px;font-weight:700}
+.chk label{display:block;padding:3px 0}
+.src-list{font-size:12px;color:var(--sub);word-break:break-all}
+.warnc{border-color:#f0c36d;background:#fffaf0}
+.warnc summary{cursor:pointer;color:var(--warn);font-size:17px}
+.notes{padding-left:22px;margin:10px 0 0}
+.notes li{margin-bottom:8px}
+.notes .my{color:#253d63;font-size:15px}
+.rncard{background:linear-gradient(90deg,#eaf1fb,#fff);border-left:6px solid var(--pri);padding:12px 16px}
+.rinen .rn-co{font-weight:700;color:var(--pri)}
+.rinen .rn-head{font-size:20px;font-weight:800;color:#0f3d7a;letter-spacing:.5px;margin:2px 0}
+.ks-pts .rinen{background:#eaf1fb;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:15px}
+.ks-pts .rinen .rn-head{font-size:17px}
+.kscard{border:2px solid var(--pri);background:var(--pri2)}
+.kscard .row{margin-top:8px}
+.ks-top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px;font-size:18px}
+.ks-top b{color:var(--pri)}
+.ks-slide{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;align-items:start}
+.ks-img svg{width:100%;height:auto;max-height:calc(100vh - 300px);border-radius:10px;display:block}
+.ks-pts h2{font-size:22px;margin:0 0 8px;color:var(--pri)}
+.ks-pts h2 .my{font-size:18px;display:block;color:#253d63}
+.ks-pts ul{margin:0;padding-left:20px}
+.ks-pts li{margin-bottom:8px;font-size:17px}
+.ks-pts li .my{font-size:15px;color:#253d63}
+.ks-foot{position:sticky;bottom:0;background:var(--bg);padding:6px 0 10px;z-index:5}
+.ks-cap{min-height:48px;margin:4px 0 8px;padding:10px 14px;background:#263238;color:#fff;border-radius:10px;font-size:17px}
+.ks-cap .my{font-size:16px}
+.ks-cap:empty{display:none}
+.ks-ctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
+.ks-end{text-align:center;padding:30px 10px}
+.ks-end h2{font-size:26px;color:var(--ok)}
+@media (max-width:760px){ .ks-slide{grid-template-columns:1fr} }
+.hide{display:none!important}
+/* ===== スマホ（iPhone・Android）向け ===== */
+@media (max-width:640px){
+  header{position:static;padding:8px 10px;gap:6px}
+  header h1{font-size:15px;min-width:100%;line-height:1.4}
+  header h1 small{font-size:11px}
+  body.both header .my{display:none}
+  .seg button{padding:5px 9px;font-size:13px}
+  .hbtn{padding:5px 8px;font-size:13px}
+  main{padding:10px}
+  .card{padding:12px;margin-bottom:10px}
+  h2{font-size:17px}
+  .rinen .rn-head{font-size:16px}
+  .rncard{font-size:14px}
+  input[type=text]{min-width:0;width:100%}
+  .row label{width:100%}
+  .grid,.final{grid-template-columns:1fr}
+  .qtop{position:sticky;top:0;z-index:10;background:var(--bg);padding:6px 0;margin:-10px 0 6px}
+  .qcard{padding:12px}
+  .ox button{font-size:42px;padding:12px 0}
+  .nav{gap:6px}
+  .nav .btn{flex:1;padding:10px 8px}
+  .fb .h{font-size:16px}
+  #histBox{overflow-x:auto}
+  th,td{font-size:13px;padding:5px 6px}
+  .ks-top{font-size:16px}
+  .ks-slide{padding:10px;gap:10px}
+  .ks-img svg{max-height:none}
+  .ks-pts h2{font-size:18px}
+  .ks-pts li{font-size:15px}
+  .ks-pts li .my{font-size:14px}
+  .ks-cap{font-size:15px;min-height:40px}
+  .ks-ctl{gap:6px}
+  .ks-ctl .btn{padding:9px 10px;font-size:14px}
+  .ks-ctl label{width:100%;text-align:center;font-size:14px}
+  .modal{padding:8px}
+  .modal .box{padding:14px}
+  .big{font-size:28px}
+  .mobhint{display:block!important}
+}
+.mobhint{display:none;font-size:13px;color:var(--warn);margin-top:8px}
+#printArea{display:none}
+@media (max-width:600px){ .qtext{font-size:18px} .sign{flex-basis:90px;width:90px;height:90px} .qbody{flex-direction:column;align-items:center} }
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  html,body{background:#fff!important}
+  header,main,.toast,.modal{display:none!important}
+  #printArea{display:block;font-size:10pt;line-height:1.5;color:#000}
+  #printArea h1{font-size:16pt;margin:0 0 4px}
+  #printArea table{margin:4px 0}
+  #printArea th,#printArea td{font-size:9pt;padding:3px 5px;border:1px solid #888}
+  #printArea .pi{border:1px solid #999;border-radius:4px;padding:4px 6px;margin-bottom:4px;page-break-inside:avoid;font-size:9pt}
+  #printArea .my{font-size:9.5pt}
+  #printArea .sig{display:flex;gap:10mm;margin-top:6mm}
+  #printArea .sig div{flex:1;border-bottom:1px solid #000;height:10mm;font-size:9pt}
+}
+.ks-end ul{text-align:left;display:inline-block;margin:6px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="appTitle"></h1>
+  <div class="seg" id="langSeg">
+    <button data-l="ja">日本語</button><button data-l="both">両方</button><button data-l="my" class="my">မြန်မာ</button>
+  </div>
+  <button class="hbtn" id="guideBtn"></button>
+  <button class="hbtn" id="homeBtn"></button>
+</header>
+<main>
+  <section id="v_home">
+    <div class="card rncard" id="rinenBox"></div>
+    <div class="card">
+      <h2 id="h_start"></h2>
+      <div class="row">
+        <label><span id="l_name"></span> <input type="text" id="name" autocomplete="off"></label>
+        <label><span id="l_rate"></span>
+          <select id="rate"><option value="0.85">0.85</option><option value="1" selected>1.0</option><option value="1.15">1.15</option><option value="1.3">1.3</option></select></label>
+      </div>
+      <p class="voice" id="voiceInfo"></p>
+      <p class="muted" id="p_howto"></p>
+    </div>
+    <div class="card kscard" id="ksCard"></div>
+    <div class="card warnc">
+      <details id="notesBox"><summary><b id="h_notes"></b></summary><div id="notesBody"></div></details>
+    </div>
+    <div class="card"><h2 id="h_toc"></h2><div id="tocBox" class="grid"></div></div>
+  </section>
+  <section id="v_kenshu" class="hide">
+    <div class="ks-top"><b id="ksNo"></b><span id="ksTitle"></span></div>
+    <div class="bar"><i id="ksBar"></i></div>
+    <div class="ks-slide" id="ksSlide"></div>
+    <div class="ks-foot"><div class="ks-cap" id="ksCap"></div>
+    <div class="ks-ctl">
+      <button class="btn gray" id="ksPrev"></button>
+      <button class="btn" id="ksPlayBtn"></button>
+      <button class="btn gray" id="ksNext"></button>
+      <label><input type="checkbox" id="ksAutoNext" checked> <span id="l_ksAuto"></span></label>
+    </div></div>
+  </section>
+</main>
+<div class="modal" id="infoModal"><div class="box" id="infoBox"></div></div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+<script>window.AUDIO_IDX={"s:b_cover:ja:0":["a_ks_ja.mp3",0,28655],"s:b_cover:ja:1":["a_ks_ja.mp3",28656,60911],"s:b_cover:ja:2":["a_ks_ja.mp3",60912,75455],"s:b_cover:ja:3":["a_ks_ja.mp3",75456,128591],"s:b_cover:ja:4":["a_ks_ja.mp3",128592,151199],"s:b_cover:ja:5":["a_ks_ja.mp3",151200,173519],"s:b_cover:ja:6":["a_ks_ja.mp3",173520,204191],"s:b_cover:ja:7":["a_ks_ja.mp3",204192,236735],"s:b_rule5:ja:0":["a_ks_ja.mp3",236736,283391],"s:b_rule5:ja:1":["a_ks_ja.mp3",283392,312047],"s:b_rule5:ja:2":["a_ks_ja.mp3",312048,333647],"s:b_rule5:ja:3":["a_ks_ja.mp3",333648,370943],"s:b_rule5:ja:4":["a_ks_ja.mp3",370944,392255],"s:b_rule5:ja:5":["a_ks_ja.mp3",392256,412127],"s:b_rule5:ja:6":["a_ks_ja.mp3",412128,432719],"s:b_rule5:ja:7":["a_ks_ja.mp3",432720,463391],"s:b_rule5:ja:8":["a_ks_ja.mp3",463392,487439],"s:b_vehicle:ja:0":["a_ks_ja.mp3",487440,524447],"s:b_vehicle:ja:1":["a_ks_ja.mp3",524448,542591],"s:b_vehicle:ja:2":["a_ks_ja.mp3",542592,575711],"s:b_vehicle:ja:3":["a_ks_ja.mp3",575712,593711],"s:b_vehicle:ja:4":["a_ks_ja.mp3",593712,653471],"s:b_vehicle:ja:5":["a_ks_ja.mp3",653472,681695],"s:b_vehicle:ja:6":["a_ks_ja.mp3",681696,735983],"s:b_left:ja:0":["a_ks_ja.mp3",735984,760175],"s:b_left:ja:1":["a_ks_ja.mp3",760176,789839],"s:b_left:ja:2":["a_ks_ja.mp3",789840,826271],"s:b_left:ja:3":["a_ks_ja.mp3",826272,843407],"s:b_left:ja:4":["a_ks_ja.mp3",843408,899567],"s:b_left:ja:5":["a_ks_ja.mp3",899568,931391],"s:b_left:ja:6":["a_ks_ja.mp3",931392,968399],"s:b_lane:ja:0":["a_ks_ja.mp3",968400,998207],"s:b_lane:ja:1":["a_ks_ja.mp3",998208,1037087],"s:b_lane:ja:2":["a_ks_ja.mp3",1037088,1054943],"s:b_lane:ja:3":["a_ks_ja.mp3",1054944,1092383],"s:b_lane:ja:4":["a_ks_ja.mp3",1092384,1109663],"s:b_lane:ja:5":["a_ks_ja.mp3",1109664,1162367],"s:b_lane:ja:6":["a_ks_ja.mp3",1162368,1202111],"s:b_roadside:ja:0":["a_ks_ja.mp3",1202112,1235375],"s:b_roadside:ja:1":["a_ks_ja.mp3",1235376,1257551],"s:b_roadside:ja:2":["a_ks_ja.mp3",1257552,1301615],"s:b_roadside:ja:3":["a_ks_ja.mp3",1301616,1336895],"s:b_roadside:ja:4":["a_ks_ja.mp3",1336896,1382687],"s:b_roadside:ja:5":["a_ks_ja.mp3",1382688,1397807],"s:b_roadside:ja:6":["a_ks_ja.mp3",1397808,1436111],"s:b_roadside:ja:7":["a_ks_ja.mp3",1436112,1452527],"s:b_sidewalk1:ja:0":["a_ks_ja.mp3",1452528,1489391],"s:b_sidewalk1:ja:1":["a_ks_ja.mp3",1489392,1527119],"s:b_sidewalk1:ja:2":["a_ks_ja.mp3",1527120,1550303],"s:b_sidewalk1:ja:3":["a_ks_ja.mp3",1550304,1600415],"s:b_sidewalk1:ja:4":["a_ks_ja.mp3",1600416,1660751],"s:b_sidewalk1:ja:5":["a_ks_ja.mp3",1660752,1725839],"s:b_sidewalk2:ja:0":["a_ks_ja.mp3",1725840,1751183],"s:b_sidewalk2:ja:1":["a_ks_ja.mp3",1751184,1792079],"s:b_sidewalk2:ja:2":["a_ks_ja.mp3",1792080,1807775],"s:b_sidewalk2:ja:3":["a_ks_ja.mp3",1807776,1835423],"s:b_sidewalk2:ja:4":["a_ks_ja.mp3",1835424,1851839],"s:b_sidewalk2:ja:5":["a_ks_ja.mp3",1851840,1884383],"s:b_sidewalk2:ja:6":["a_ks_ja.mp3",1884384,1915775],"s:b_sidewalk2:ja:7":["a_ks_ja.mp3",1915776,1971647],"s:b_signal:ja:0":["a_ks_ja.mp3",1971648,2006495],"s:b_signal:ja:1":["a_ks_ja.mp3",2006496,2038751],"s:b_signal:ja:2":["a_ks_ja.mp3",2038752,2109887],"s:b_signal:ja:3":["a_ks_ja.mp3",2109888,2138111],"s:b_signal:ja:4":["a_ks_ja.mp3",2138112,2192111],"s:b_signal:ja:5":["a_ks_ja.mp3",2192112,2225807],"s:b_stop:ja:0":["a_ks_ja.mp3",2225808,2276495],"s:b_stop:ja:1":["a_ks_ja.mp3",2276496,2303279],"s:b_stop:ja:2":["a_ks_ja.mp3",2303280,2320127],"s:b_stop:ja:3":["a_ks_ja.mp3",2320128,2362319],"s:b_stop:ja:4":["a_ks_ja.mp3",2362320,2376719],"s:b_stop:ja:5":["a_ks_ja.mp3",2376720,2408687],"s:b_stop:ja:6":["a_ks_ja.mp3",2408688,2444831],"s:b_stop:ja:7":["a_ks_ja.mp3",2444832,2489903],"s:b_cross:ja:0":["a_ks_ja.mp3",2489904,2535119],"s:b_cross:ja:1":["a_ks_ja.mp3",2535120,2596319],"s:b_cross:ja:2":["a_ks_ja.mp3",2596320,2645711],"s:b_cross:ja:3":["a_ks_ja.mp3",2645712,2675231],"s:b_cross:ja:4":["a_ks_ja.mp3",2675232,2717567],"s:b_right:ja:0":["a_ks_ja.mp3",2717568,2754719],"s:b_right:ja:1":["a_ks_ja.mp3",2754720,2771135],"s:b_right:ja:2":["a_ks_ja.mp3",2771136,2835503],"s:b_right:ja:3":["a_ks_ja.mp3",2835504,2865455],"s:b_right:ja:4":["a_ks_ja.mp3",2865456,2892959],"s:b_right:ja:5":["a_ks_ja.mp3",2892960,2925647],"s:b_right:ja:6":["a_ks_ja.mp3",2925648,2974463],"s:b_crosswalk:ja:0":["a_ks_ja.mp3",2974464,3003839],"s:b_crosswalk:ja:1":["a_ks_ja.mp3",3003840,3048623],"s:b_crosswalk:ja:2":["a_ks_ja.mp3",3048624,3072239],"s:b_crosswalk:ja:3":["a_ks_ja.mp3",3072240,3104495],"s:b_crosswalk:ja:4":["a_ks_ja.mp3",3104496,3179663],"s:b_crosswalk:ja:5":["a_ks_ja.mp3",3179664,3200831],"s:b_rail:ja:0":["a_ks_ja.mp3",3200832,3252959],"s:b_rail:ja:1":["a_ks_ja.mp3",3252960,3269807],"s:b_rail:ja:2":["a_ks_ja.mp3",3269808,3318335],"s:b_rail:ja:3":["a_ks_ja.mp3",3318336,3334175],"s:b_rail:ja:4":["a_ks_ja.mp3",3334176,3366287],"s:b_rail:ja:5":["a_ks_ja.mp3",3366288,3386447],"s:b_hand:ja:0":["a_ks_ja.mp3",3386448,3420575],"s:b_hand:ja:1":["a_ks_ja.mp3",3420576,3453119],"s:b_hand:ja:2":["a_ks_ja.mp3",3453120,3485663],"s:b_hand:ja:3":["a_ks_ja.mp3",3485664,3510863],"s:b_hand:ja:4":["a_ks_ja.mp3",3510864,3545135],"s:b_hand:ja:5":["a_ks_ja.mp3",3545136,3563279],"s:b_hand:ja:6":["a_ks_ja.mp3",3563280,3591071],"s:b_hand:ja:7":["a_ks_ja.mp3",3591072,3624767],"s:b_hand:ja:8":["a_ks_ja.mp3",3624768,3656159],"s:b_sumaho:ja:0":["a_ks_ja.mp3",3656160,3703967],"s:b_sumaho:ja:1":["a_ks_ja.mp3",3703968,3723407],"s:b_sumaho:ja:2":["a_ks_ja.mp3",3723408,3754079],"s:b_sumaho:ja:3":["a_ks_ja.mp3",3754080,3810383],"s:b_sumaho:ja:4":["a_ks_ja.mp3",3810384,3862079],"s:b_sumaho:ja:5":["a_ks_ja.mp3",3862080,3913631],"s:b_alcohol:ja:0":["a_ks_ja.mp3",3913632,3938543],"s:b_alcohol:ja:1":["a_ks_ja.mp3",3938544,3963599],"s:b_alcohol:ja:2":["a_ks_ja.mp3",3963600,4005071],"s:b_alcohol:ja:3":["a_ks_ja.mp3",4005072,4050287],"s:b_alcohol:ja:4":["a_ks_ja.mp3",4050288,4082687],"s:b_alcohol:ja:5":["a_ks_ja.mp3",4082688,4113647],"s:b_alcohol:ja:6":["a_ks_ja.mp3",4113648,4146335],"s:b_alcohol:ja:7":["a_ks_ja.mp3",4146336,4184927],"s:b_alcohol:ja:8":["a_ks_ja.mp3",4184928,4217759],"s:b_ban:ja:0":["a_ks_ja.mp3",4217760,4234607],"s:b_ban:ja:1":["a_ks_ja.mp3",4234608,4274783],"s:b_ban:ja:2":["a_ks_ja.mp3",4274784,4304879],"s:b_ban:ja:3":["a_ks_ja.mp3",4304880,4326623],"s:b_ban:ja:4":["a_ks_ja.mp3",4326624,4362191],"s:b_ban:ja:5":["a_ks_ja.mp3",4362192,4389551],"s:b_ban:ja:6":["a_ks_ja.mp3",4389552,4406975],"s:b_ban:ja:7":["a_ks_ja.mp3",4406976,4425839],"s:b_ban:ja:8":["a_ks_ja.mp3",4425840,4458383],"s:b_ban:ja:9":["a_ks_ja.mp3",4458384,4499855],"s:b_ban:ja:10":["a_ks_ja.mp3",4499856,4522895],"s:b_night:ja:0":["a_ks_ja.mp3",4522896,4562639],"s:b_night:ja:1":["a_ks_ja.mp3",4562640,4591007],"s:b_night:ja:2":["a_ks_ja.mp3",4591008,4611167],"s:b_night:ja:3":["a_ks_ja.mp3",4611168,4640111],"s:b_night:ja:4":["a_ks_ja.mp3",4640112,4672367],"s:b_night:ja:5":["a_ks_ja.mp3",4672368,4719311],"s:b_night:ja:6":["a_ks_ja.mp3",4719312,4765391],"s:b_night:ja:7":["a_ks_ja.mp3",4765392,4787279],"s:b_danger1:ja:0":["a_ks_ja.mp3",4787280,4815503],"s:b_danger1:ja:1":["a_ks_ja.mp3",4815504,4877855],"s:b_danger1:ja:2":["a_ks_ja.mp3",4877856,4921919],"s:b_danger1:ja:3":["a_ks_ja.mp3",4921920,4967999],"s:b_danger1:ja:4":["a_ks_ja.mp3",4968000,5004287],"s:b_danger1:ja:5":["a_ks_ja.mp3",5004288,5033087],"s:b_danger1:ja:6":["a_ks_ja.mp3",5033088,5070959],"s:b_danger1:ja:7":["a_ks_ja.mp3",5070960,5090831],"s:b_danger2:ja:0":["a_ks_ja.mp3",5090832,5114015],"s:b_danger2:ja:1":["a_ks_ja.mp3",5114016,5171903],"s:b_danger2:ja:2":["a_ks_ja.mp3",5171904,5186591],"s:b_danger2:ja:3":["a_ks_ja.mp3",5186592,5229071],"s:b_danger2:ja:4":["a_ks_ja.mp3",5229072,5245487],"s:b_danger2:ja:5":["a_ks_ja.mp3",5245488,5282495],"s:b_danger2:ja:6":["a_ks_ja.mp3",5282496,5320223],"s:b_danger2:ja:7":["a_ks_ja.mp3",5320224,5344415],"s:b_danger2:ja:8":["a_ks_ja.mp3",5344416,5376383],"s:b_danger3:ja:0":["a_ks_ja.mp3",5376384,5416559],"s:b_danger3:ja:1":["a_ks_ja.mp3",5416560,5450111],"s:b_danger3:ja:2":["a_ks_ja.mp3",5450112,5483519],"s:b_danger3:ja:3":["a_ks_ja.mp3",5483520,5514767],"s:b_danger3:ja:4":["a_ks_ja.mp3",5514768,5538239],"s:b_danger3:ja:5":["a_ks_ja.mp3",5538240,5581295],"s:b_danger3:ja:6":["a_ks_ja.mp3",5581296,5627231],"s:b_side:ja:0":["a_ks_ja.mp3",5627232,5662655],"s:b_side:ja:1":["a_ks_ja.mp3",5662656,5738255],"s:b_side:ja:2":["a_ks_ja.mp3",5738256,5775983],"s:b_side:ja:3":["a_ks_ja.mp3",5775984,5803919],"s:b_side:ja:4":["a_ks_ja.mp3",5803920,5831423],"s:b_side:ja:5":["a_ks_ja.mp3",5831424,5877071],"s:b_aokippu:ja:0":["a_ks_ja.mp3",5877072,5930063],"s:b_aokippu:ja:1":["a_ks_ja.mp3",5930064,5965343],"s:b_aokippu:ja:2":["a_ks_ja.mp3",5965344,6075215],"s:b_aokippu:ja:3":["a_ks_ja.mp3",6075216,6116111],"s:b_aokippu:ja:4":["a_ks_ja.mp3",6116112,6148367],"s:b_aokippu:ja:5":["a_ks_ja.mp3",6148368,6187823],"s:b_helmet:ja:0":["a_ks_ja.mp3",6187824,6235343],"s:b_helmet:ja:1":["a_ks_ja.mp3",6235344,6279839],"s:b_helmet:ja:2":["a_ks_ja.mp3",6279840,6319151],"s:b_helmet:ja:3":["a_ks_ja.mp3",6319152,6373007],"s:b_helmet:ja:4":["a_ks_ja.mp3",6373008,6402095],"s:b_helmet:ja:5":["a_ks_ja.mp3",6402096,6435647],"s:b_check:ja:0":["a_ks_ja.mp3",6435648,6458975],"s:b_check:ja:1":["a_ks_ja.mp3",6458976,6489215],"s:b_check:ja:2":["a_ks_ja.mp3",6489216,6527519],"s:b_check:ja:3":["a_ks_ja.mp3",6527520,6578063],"s:b_check:ja:4":["a_ks_ja.mp3",6578064,6612479],"s:b_check:ja:5":["a_ks_ja.mp3",6612480,6662303],"s:b_check:ja:6":["a_ks_ja.mp3",6662304,6686495],"s:b_check:ja:7":["a_ks_ja.mp3",6686496,6711119],"s:b_insurance:ja:0":["a_ks_ja.mp3",6711120,6754319],"s:b_insurance:ja:1":["a_ks_ja.mp3",6754320,6815951],"s:b_insurance:ja:2":["a_ks_ja.mp3",6815952,6869951],"s:b_insurance:ja:3":["a_ks_ja.mp3",6869952,6908111],"s:b_insurance:ja:4":["a_ks_ja.mp3",6908112,6969599],"s:b_insurance:ja:5":["a_ks_ja.mp3",6969600,6993647],"s:b_child:ja:0":["a_ks_ja.mp3",6993648,7051103],"s:b_child:ja:1":["a_ks_ja.mp3",7051104,7098911],"s:b_child:ja:2":["a_ks_ja.mp3",7098912,7157519],"s:b_child:ja:3":["a_ks_ja.mp3",7157520,7202303],"s:b_child:ja:4":["a_ks_ja.mp3",7202304,7253279],"s:b_park:ja:0":["a_ks_ja.mp3",7253280,7271999],"s:b_park:ja:1":["a_ks_ja.mp3",7272000,7302815],"s:b_park:ja:2":["a_ks_ja.mp3",7302816,7323551],"s:b_park:ja:3":["a_ks_ja.mp3",7323552,7350335],"s:b_park:ja:4":["a_ks_ja.mp3",7350336,7381007],"s:b_park:ja:5":["a_ks_ja.mp3",7381008,7410671],"s:b_park:ja:6":["a_ks_ja.mp3",7410672,7442639],"s:b_park:ja:7":["a_ks_ja.mp3",7442640,7479359],"s:b_accident:ja:0":["a_ks_ja.mp3",7479360,7503551],"s:b_accident:ja:1":["a_ks_ja.mp3",7503552,7525295],"s:b_accident:ja:2":["a_ks_ja.mp3",7525296,7565039],"s:b_accident:ja:3":["a_ks_ja.mp3",7565040,7585487],"s:b_accident:ja:4":["a_ks_ja.mp3",7585488,7616015],"s:b_accident:ja:5":["a_ks_ja.mp3",7616016,7659359],"s:b_accident:ja:6":["a_ks_ja.mp3",7659360,7701551],"s:b_accident:ja:7":["a_ks_ja.mp3",7701552,7732799],"s:b_accident:ja:8":["a_ks_ja.mp3",7732800,7770239],"s:b_end:ja:0":["a_ks_ja.mp3",7770240,7784063],"s:b_end:ja:1":["a_ks_ja.mp3",7784064,7812287],"s:b_end:ja:2":["a_ks_ja.mp3",7812288,7835759],"s:b_end:ja:3":["a_ks_ja.mp3",7835760,7860671],"s:b_end:ja:4":["a_ks_ja.mp3",7860672,7896671],"s:b_end:ja:5":["a_ks_ja.mp3",7896672,7912079],"s:b_end:ja:6":["a_ks_ja.mp3",7912080,7928063],"s:b_end:ja:7":["a_ks_ja.mp3",7928064,7943039],"s:b_end:ja:8":["a_ks_ja.mp3",7943040,7984511],"s:b_end:ja:9":["a_ks_ja.mp3",7984512,8024111],"s:b_end:ja:10":["a_ks_ja.mp3",8024112,8070335],"s:b_cover:my:0":["a_ks_my.mp3",0,30239],"s:b_cover:my:1":["a_ks_my.mp3",30240,70127],"s:b_cover:my:2":["a_ks_my.mp3",70128,86687],"s:b_cover:my:3":["a_ks_my.mp3",86688,134351],"s:b_cover:my:4":["a_ks_my.mp3",134352,155519],"s:b_cover:my:5":["a_ks_my.mp3",155520,175679],"s:b_cover:my:6":["a_ks_my.mp3",175680,205055],"s:b_cover:my:7":["a_ks_my.mp3",205056,231263],"s:b_rule5:my:0":["a_ks_my.mp3",231264,280655],"s:b_rule5:my:1":["a_ks_my.mp3",280656,316511],"s:b_rule5:my:2":["a_ks_my.mp3",316512,346607],"s:b_rule5:my:3":["a_ks_my.mp3",346608,383471],"s:b_rule5:my:4":["a_ks_my.mp3",383472,401327],"s:b_rule5:my:5":["a_ks_my.mp3",401328,426671],"s:b_rule5:my:6":["a_ks_my.mp3",426672,441071],"s:b_rule5:my:7":["a_ks_my.mp3",441072,468287],"s:b_rule5:my:8":["a_ks_my.mp3",468288,489743],"s:b_vehicle:my:0":["a_ks_my.mp3",489744,526031],"s:b_vehicle:my:1":["a_ks_my.mp3",526032,541439],"s:b_vehicle:my:2":["a_ks_my.mp3",541440,572111],"s:b_vehicle:my:3":["a_ks_my.mp3",572112,590543],"s:b_vehicle:my:4":["a_ks_my.mp3",590544,649295],"s:b_vehicle:my:5":["a_ks_my.mp3",649296,681983],"s:b_vehicle:my:6":["a_ks_my.mp3",681984,746495],"s:b_left:my:0":["a_ks_my.mp3",746496,776015],"s:b_left:my:1":["a_ks_my.mp3",776016,805823],"s:b_left:my:2":["a_ks_my.mp3",805824,854495],"s:b_left:my:3":["a_ks_my.mp3",854496,876959],"s:b_left:my:4":["a_ks_my.mp3",876960,935279],"s:b_left:my:5":["a_ks_my.mp3",935280,962927],"s:b_left:my:6":["a_ks_my.mp3",962928,1011167],"s:b_lane:my:0":["a_ks_my.mp3",1011168,1035647],"s:b_lane:my:1":["a_ks_my.mp3",1035648,1077407],"s:b_lane:my:2":["a_ks_my.mp3",1077408,1105055],"s:b_lane:my:3":["a_ks_my.mp3",1105056,1150271],"s:b_lane:my:4":["a_ks_my.mp3",1150272,1178207],"s:b_lane:my:5":["a_ks_my.mp3",1178208,1233647],"s:b_lane:my:6":["a_ks_my.mp3",1233648,1270511],"s:b_roadside:my:0":["a_ks_my.mp3",1270512,1302767],"s:b_roadside:my:1":["a_ks_my.mp3",1302768,1327823],"s:b_roadside:my:2":["a_ks_my.mp3",1327824,1370879],"s:b_roadside:my:3":["a_ks_my.mp3",1370880,1421423],"s:b_roadside:my:4":["a_ks_my.mp3",1421424,1466063],"s:b_roadside:my:5":["a_ks_my.mp3",1466064,1491839],"s:b_roadside:my:6":["a_ks_my.mp3",1491840,1537775],"s:b_roadside:my:7":["a_ks_my.mp3",1537776,1565423],"s:b_sidewalk1:my:0":["a_ks_my.mp3",1565424,1610207],"s:b_sidewalk1:my:1":["a_ks_my.mp3",1610208,1660319],"s:b_sidewalk1:my:2":["a_ks_my.mp3",1660320,1689407],"s:b_sidewalk1:my:3":["a_ks_my.mp3",1689408,1738223],"s:b_sidewalk1:my:4":["a_ks_my.mp3",1738224,1800143],"s:b_sidewalk1:my:5":["a_ks_my.mp3",1800144,1874879],"s:b_sidewalk2:my:0":["a_ks_my.mp3",1874880,1904399],"s:b_sidewalk2:my:1":["a_ks_my.mp3",1904400,1951199],"s:b_sidewalk2:my:2":["a_ks_my.mp3",1951200,1970783],"s:b_sidewalk2:my:3":["a_ks_my.mp3",1970784,1999439],"s:b_sidewalk2:my:4":["a_ks_my.mp3",1999440,2027087],"s:b_sidewalk2:my:5":["a_ks_my.mp3",2027088,2057903],"s:b_sidewalk2:my:6":["a_ks_my.mp3",2057904,2082815],"s:b_sidewalk2:my:7":["a_ks_my.mp3",2082816,2159567],"s:b_signal:my:0":["a_ks_my.mp3",2159568,2192111],"s:b_signal:my:1":["a_ks_my.mp3",2192112,2224367],"s:b_signal:my:2":["a_ks_my.mp3",2224368,2286863],"s:b_signal:my:3":["a_ks_my.mp3",2286864,2313647],"s:b_signal:my:4":["a_ks_my.mp3",2313648,2367359],"s:b_signal:my:5":["a_ks_my.mp3",2367360,2419055],"s:b_stop:my:0":["a_ks_my.mp3",2419056,2461679],"s:b_stop:my:1":["a_ks_my.mp3",2461680,2485583],"s:b_stop:my:2":["a_ks_my.mp3",2485584,2513951],"s:b_stop:my:3":["a_ks_my.mp3",2513952,2555423],"s:b_stop:my:4":["a_ks_my.mp3",2555424,2582207],"s:b_stop:my:5":["a_ks_my.mp3",2582208,2615759],"s:b_stop:my:6":["a_ks_my.mp3",2615760,2654351],"s:b_stop:my:7":["a_ks_my.mp3",2654352,2709215],"s:b_cross:my:0":["a_ks_my.mp3",2709216,2752559],"s:b_cross:my:1":["a_ks_my.mp3",2752560,2806703],"s:b_cross:my:2":["a_ks_my.mp3",2806704,2847455],"s:b_cross:my:3":["a_ks_my.mp3",2847456,2881151],"s:b_cross:my:4":["a_ks_my.mp3",2881152,2919887],"s:b_right:my:0":["a_ks_my.mp3",2919888,2948831],"s:b_right:my:1":["a_ks_my.mp3",2948832,2967407],"s:b_right:my:2":["a_ks_my.mp3",2967408,3023279],"s:b_right:my:3":["a_ks_my.mp3",3023280,3050063],"s:b_right:my:4":["a_ks_my.mp3",3050064,3070943],"s:b_right:my:5":["a_ks_my.mp3",3070944,3098735],"s:b_right:my:6":["a_ks_my.mp3",3098736,3167423],"s:b_crosswalk:my:0":["a_ks_my.mp3",3167424,3191903],"s:b_crosswalk:my:1":["a_ks_my.mp3",3191904,3235679],"s:b_crosswalk:my:2":["a_ks_my.mp3",3235680,3260015],"s:b_crosswalk:my:3":["a_ks_my.mp3",3260016,3291263],"s:b_crosswalk:my:4":["a_ks_my.mp3",3291264,3366863],"s:b_crosswalk:my:5":["a_ks_my.mp3",3366864,3401999],"s:b_rail:my:0":["a_ks_my.mp3",3402000,3450383],"s:b_rail:my:1":["a_ks_my.mp3",3450384,3477167],"s:b_rail:my:2":["a_ks_my.mp3",3477168,3523823],"s:b_rail:my:3":["a_ks_my.mp3",3523824,3551615],"s:b_rail:my:4":["a_ks_my.mp3",3551616,3585311],"s:b_rail:my:5":["a_ks_my.mp3",3585312,3603743],"s:b_hand:my:0":["a_ks_my.mp3",3603744,3637151],"s:b_hand:my:1":["a_ks_my.mp3",3637152,3666239],"s:b_hand:my:2":["a_ks_my.mp3",3666240,3695903],"s:b_hand:my:3":["a_ks_my.mp3",3695904,3721103],"s:b_hand:my:4":["a_ks_my.mp3",3721104,3756815],"s:b_hand:my:5":["a_ks_my.mp3",3756816,3786191],"s:b_hand:my:6":["a_ks_my.mp3",3786192,3812687],"s:b_hand:my:7":["a_ks_my.mp3",3812688,3844079],"s:b_hand:my:8":["a_ks_my.mp3",3844080,3889007],"s:b_sumaho:my:0":["a_ks_my.mp3",3889008,3937247],"s:b_sumaho:my:1":["a_ks_my.mp3",3937248,3955967],"s:b_sumaho:my:2":["a_ks_my.mp3",3955968,3987647],"s:b_sumaho:my:3":["a_ks_my.mp3",3987648,4056047],"s:b_sumaho:my:4":["a_ks_my.mp3",4056048,4112639],"s:b_sumaho:my:5":["a_ks_my.mp3",4112640,4177007],"s:b_alcohol:my:0":["a_ks_my.mp3",4177008,4196879],"s:b_alcohol:my:1":["a_ks_my.mp3",4196880,4229855],"s:b_alcohol:my:2":["a_ks_my.mp3",4229856,4284287],"s:b_alcohol:my:3":["a_ks_my.mp3",4284288,4346351],"s:b_alcohol:my:4":["a_ks_my.mp3",4346352,4377023],"s:b_alcohol:my:5":["a_ks_my.mp3",4377024,4404815],"s:b_alcohol:my:6":["a_ks_my.mp3",4404816,4445135],"s:b_alcohol:my:7":["a_ks_my.mp3",4445136,4497119],"s:b_alcohol:my:8":["a_ks_my.mp3",4497120,4537151],"s:b_ban:my:0":["a_ks_my.mp3",4537152,4559039],"s:b_ban:my:1":["a_ks_my.mp3",4559040,4610015],"s:b_ban:my:2":["a_ks_my.mp3",4610016,4643999],"s:b_ban:my:3":["a_ks_my.mp3",4644000,4680575],"s:b_ban:my:4":["a_ks_my.mp3",4680576,4719887],"s:b_ban:my:5":["a_ks_my.mp3",4719888,4766975],"s:b_ban:my:6":["a_ks_my.mp3",4766976,4788575],"s:b_ban:my:7":["a_ks_my.mp3",4788576,4837103],"s:b_ban:my:8":["a_ks_my.mp3",4837104,4884479],"s:b_ban:my:9":["a_ks_my.mp3",4884480,4921631],"s:b_night:my:0":["a_ks_my.mp3",4921632,4953167],"s:b_night:my:1":["a_ks_my.mp3",4953168,4988015],"s:b_night:my:2":["a_ks_my.mp3",4988016,5009039],"s:b_night:my:3":["a_ks_my.mp3",5009040,5035823],"s:b_night:my:4":["a_ks_my.mp3",5035824,5065631],"s:b_night:my:5":["a_ks_my.mp3",5065632,5114879],"s:b_night:my:6":["a_ks_my.mp3",5114880,5165279],"s:b_night:my:7":["a_ks_my.mp3",5165280,5182991],"s:b_danger1:my:0":["a_ks_my.mp3",5182992,5220431],"s:b_danger1:my:1":["a_ks_my.mp3",5220432,5296031],"s:b_danger1:my:2":["a_ks_my.mp3",5296032,5349887],"s:b_danger1:my:3":["a_ks_my.mp3",5349888,5395391],"s:b_danger1:my:4":["a_ks_my.mp3",5395392,5429375],"s:b_danger1:my:5":["a_ks_my.mp3",5429376,5453999],"s:b_danger1:my:6":["a_ks_my.mp3",5454000,5498495],"s:b_danger1:my:7":["a_ks_my.mp3",5498496,5519807],"s:b_danger2:my:0":["a_ks_my.mp3",5519808,5546159],"s:b_danger2:my:1":["a_ks_my.mp3",5546160,5606783],"s:b_danger2:my:2":["a_ks_my.mp3",5606784,5630255],"s:b_danger2:my:3":["a_ks_my.mp3",5630256,5666111],"s:b_danger2:my:4":["a_ks_my.mp3",5666112,5702399],"s:b_danger2:my:5":["a_ks_my.mp3",5702400,5733791],"s:b_danger2:my:6":["a_ks_my.mp3",5733792,5755247],"s:b_danger2:my:7":["a_ks_my.mp3",5755248,5784335],"s:b_danger3:my:0":["a_ks_my.mp3",5784336,5822639],"s:b_danger3:my:1":["a_ks_my.mp3",5822640,5858495],"s:b_danger3:my:2":["a_ks_my.mp3",5858496,5887871],"s:b_danger3:my:3":["a_ks_my.mp3",5887872,5920991],"s:b_danger3:my:4":["a_ks_my.mp3",5920992,5940863],"s:b_danger3:my:5":["a_ks_my.mp3",5940864,5975855],"s:b_danger3:my:6":["a_ks_my.mp3",5975856,6014735],"s:b_side:my:0":["a_ks_my.mp3",6014736,6051311],"s:b_side:my:1":["a_ks_my.mp3",6051312,6123743],"s:b_side:my:2":["a_ks_my.mp3",6123744,6157295],"s:b_side:my:3":["a_ks_my.mp3",6157296,6194303],"s:b_side:my:4":["a_ks_my.mp3",6194304,6228143],"s:b_side:my:5":["a_ks_my.mp3",6228144,6270623],"s:b_aokippu:my:0":["a_ks_my.mp3",6270624,6330959],"s:b_aokippu:my:1":["a_ks_my.mp3",6330960,6374735],"s:b_aokippu:my:2":["a_ks_my.mp3",6374736,6529823],"s:b_aokippu:my:3":["a_ks_my.mp3",6529824,6571439],"s:b_aokippu:my:4":["a_ks_my.mp3",6571440,6611471],"s:b_aokippu:my:5":["a_ks_my.mp3",6611472,6648047],"s:b_helmet:my:0":["a_ks_my.mp3",6648048,6700463],"s:b_helmet:my:1":["a_ks_my.mp3",6700464,6732719],"s:b_helmet:my:2":["a_ks_my.mp3",6732720,6770735],"s:b_helmet:my:3":["a_ks_my.mp3",6770736,6820703],"s:b_helmet:my:4":["a_ks_my.mp3",6820704,6847775],"s:b_helmet:my:5":["a_ks_my.mp3",6847776,6880319],"s:b_check:my:0":["a_ks_my.mp3",6880320,6898031],"s:b_check:my:1":["a_ks_my.mp3",6898032,6922223],"s:b_check:my:2":["a_ks_my.mp3",6922224,6956063],"s:b_check:my:3":["a_ks_my.mp3",6956064,7002143],"s:b_check:my:4":["a_ks_my.mp3",7002144,7047215],"s:b_check:my:5":["a_ks_my.mp3",7047216,7082351],"s:b_check:my:6":["a_ks_my.mp3",7082352,7112303],"s:b_check:my:7":["a_ks_my.mp3",7112304,7134767],"s:b_insurance:my:0":["a_ks_my.mp3",7134768,7177535],"s:b_insurance:my:1":["a_ks_my.mp3",7177536,7262927],"s:b_insurance:my:2":["a_ks_my.mp3",7262928,7339247],"s:b_insurance:my:3":["a_ks_my.mp3",7339248,7385615],"s:b_insurance:my:4":["a_ks_my.mp3",7385616,7465823],"s:b_insurance:my:5":["a_ks_my.mp3",7465824,7486271],"s:b_child:my:0":["a_ks_my.mp3",7486272,7554671],"s:b_child:my:1":["a_ks_my.mp3",7554672,7600319],"s:b_child:my:2":["a_ks_my.mp3",7600320,7661375],"s:b_child:my:3":["a_ks_my.mp3",7661376,7705007],"s:b_child:my:4":["a_ks_my.mp3",7705008,7767503],"s:b_park:my:0":["a_ks_my.mp3",7767504,7789823],"s:b_park:my:1":["a_ks_my.mp3",7789824,7821791],"s:b_park:my:2":["a_ks_my.mp3",7821792,7846703],"s:b_park:my:3":["a_ks_my.mp3",7846704,7877375],"s:b_park:my:4":["a_ks_my.mp3",7877376,7900991],"s:b_park:my:5":["a_ks_my.mp3",7900992,7931951],"s:b_park:my:6":["a_ks_my.mp3",7931952,7959455],"s:b_park:my:7":["a_ks_my.mp3",7959456,7994303],"s:b_accident:my:0":["a_ks_my.mp3",7994304,8018927],"s:b_accident:my:1":["a_ks_my.mp3",8018928,8038367],"s:b_accident:my:2":["a_ks_my.mp3",8038368,8078831],"s:b_accident:my:3":["a_ks_my.mp3",8078832,8097551],"s:b_accident:my:4":["a_ks_my.mp3",8097552,8129951],"s:b_accident:my:5":["a_ks_my.mp3",8129952,8189567],"s:b_accident:my:6":["a_ks_my.mp3",8189568,8244719],"s:b_accident:my:7":["a_ks_my.mp3",8244720,8277695],"s:b_accident:my:8":["a_ks_my.mp3",8277696,8313839],"s:b_end:my:0":["a_ks_my.mp3",8313840,8329967],"s:b_end:my:1":["a_ks_my.mp3",8329968,8363231],"s:b_end:my:2":["a_ks_my.mp3",8363232,8385551],"s:b_end:my:3":["a_ks_my.mp3",8385552,8413487],"s:b_end:my:4":["a_ks_my.mp3",8413488,8459279],"s:b_end:my:5":["a_ks_my.mp3",8459280,8473535],"s:b_end:my:6":["a_ks_my.mp3",8473536,8489519],"s:b_end:my:7":["a_ks_my.mp3",8489520,8501183],"s:b_end:my:8":["a_ks_my.mp3",8501184,8563535],"s:b_end:my:9":["a_ks_my.mp3",8563536,8598959],"s:b_end:my:10":["a_ks_my.mp3",8598960,8650799],"ksend:ja":["a_c_ja.mp3",0,42047],"ksend:my":["a_c_my.mp3",0,32687]};</script>
+<script>
+// ===== 共通部品（外免切替アプリから流用） =====
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function store(k,v){ try{ localStorage.setItem('jt_'+k, JSON.stringify(v)); }catch(e){} }
+function load(k,d){ try{ const v=localStorage.getItem('jt_'+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+function toast(msg){ const t=$('toast'); t.innerHTML=msg; t.classList.add('on'); clearTimeout(toast.h); toast.h=setTimeout(()=>t.classList.remove('on'),3500); }
+let LANG = load('lang','both');
+function T(k){ const v=UI[k]; if(!v) return k; if(LANG==='ja') return esc(v[0]); if(LANG==='my') return '<span class="my">'+esc(v[1])+'</span>'; return esc(v[0])+' <span class="my" style="font-size:.85em;opacity:.85">/ '+esc(v[1])+'</span>'; }
+function Tp(k){ const v=UI[k]; return LANG==='my'? v[1] : v[0]; } // プレーン（confirm用）
+function Tboth(k){ const v=UI[k]; return LANG==='ja'? v[0] : LANG==='my'? v[1] : v[0]+'\n'+v[1]; }
+// 問題・解説など、2言語の本文
+function bi(ja,my,cls){ let h=''; if(LANG!=='my') h+='<div class="ja '+(cls||'')+'">'+esc(ja)+'</div>'; if(LANG!=='ja') h+='<div class="my '+(cls||'')+'">'+esc(my)+'</div>'; return h; }
+// ===== 読み上げ（Edge：日本語＝七海、ミャンマー語＝ニーラー。ネット接続時） =====
+let vJa=null, vMy=null;
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints>1 && /Macintosh/.test(navigator.userAgent));
+let myWarned=false;
+function pickVoices(){
+  const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const ja = vs.filter(v=>/^ja([-_]|$)/i.test(v.lang||''));
+  vJa = ja.find(v=>/Nanami|七海/.test(v.name)) || ja.find(v=>/Online|Natural|Google/.test(v.name)) || ja.find(v=>/Kyoko|Haruka|Ayumi|Sayaka|O-ren/.test(v.name)) || ja.find(v=>v.localService) || ja[0] || null;
+  const my = vs.filter(v=>/^my([-_]|$)/i.test(v.lang||'') || /Burmese|Myanmar/.test(v.name));
+  vMy = my.find(v=>/Nilar|နီလာ/.test(v.name)) || my[0] || null;
+  const vi=$('voiceInfo'); if(!vi) return;
+  const nm = v => !v ? '' : /Nanami|七海/.test(v.name)?'七海' : /Nilar|နီလာ/.test(v.name)?'နီလာ (Nilar)' : v.name.replace(/^Microsoft\s+/,'').replace(/\s*[-(].*$/,'');
+  if(!window.speechSynthesis){ vi.className='voice warn'; vi.innerHTML='このブラウザは読み上げに対応していません。Microsoft Edge で開いてください。'; return; }
+  let s='🔊 '; let warn=false;
+  s += '日本語：'+(vJa? nm(vJa) : '（声なし）')+'　／　<span class="my">မြန်မာ：'+(vMy? nm(vMy) : '（声なし）')+'</span>';
+  if(!vMy){ warn=true; s+= IS_MOBILE ? '<br>この端末にはミャンマー語の読み上げの声がありません。ミャンマー語は文字（字幕）で表示します。日本語の声は使えます。<span class="my">ဤဖုန်းတွင် မြန်မာအသံ မရှိပါ။ မြန်မာဘာသာကို စာသားဖြင့် ပြပါမည်။</span>' : '<br>ミャンマー語の声は Microsoft Edge でインターネットにつないだときに使えます。<span class="my">မြန်မာအသံကို Microsoft Edge ဖြင့် အင်တာနက်ချိတ်ဆက်ထားမှသာ အသုံးပြုနိုင်သည်။</span>'; }
+  vi.className = 'voice'+(warn?' warn':''); vi.innerHTML = s;
+}
+if(window.speechSynthesis){ speechSynthesis.onvoiceschanged=pickVoices; setTimeout(pickVoices,300); setTimeout(pickVoices,2000); }
+// スマホの声（iPhone・Android）が読み間違えやすい語は、ひらがなで読ませる
+const YOMI = [['軽車両','けいしゃりょう'],['並進','へいしん'],['青切符','あおきっぷ'],['反則金','はんそくきん'],['防犯登録','ぼうはんとうろく'],['損害賠償','そんがいばいしょう'],['手信号','てしんごう'],['普通自転車','ふつうじてんしゃ'],['矢羽根','やばね'],['横断帯','おうだんたい'],['傘差し','かささし'],['二人乗り','ふたりのり'],['幼児','ようじ'],['車道','しゃどう'],['歩道','ほどう'],['左側端','ひだりがわたん'],['自転車道','じてんしゃどう'],['踏切','ふみきり'],['一時停止','いちじていし'],['無灯火','むとうか'],['酒気','しゅき'],['外免切替','がいめんきりかえ'],['外免','がいめん'],['原付','げんつき'],['路側帯','ろそくたい'],['路肩','ろかた'],['酒気帯び','しゅきおび'],['警音器','けいおんき'],['幅寄せ','はばよせ'],['空走距離','くうそうきょり'],['制動距離','せいどうきょり'],['輪止め','わどめ'],['発炎筒','はつえんとう'],['軌道敷','きどうしき'],['内輪差','ないりんさ'],['追抜き','おいぬき'],['追越し','おいこし'],['停止表示器材','ていしひょうじきざい'],['遮断機','しゃだんき'],['本線車道','ほんせんしゃどう'],['中央分離帯','ちゅうおうぶんりたい'],['側端','そくたん'],['左方','さほう'],['盲導犬','もうどうけん'],['専用通行帯','せんようつうこうたい'],['優先通行帯','ゆうせんつうこうたい'],['通行帯','つうこうたい'],['駐停車','ちゅうていしゃ'],['転回','てんかい'],['徐行','じょこう'],['標示','ひょうじ'],
+ ['km/h','キロ'],['km','キロメートル'],['ｍ','メートル'],['m以内','メートル以内'],['m以上','メートル以上'],['m手前','メートル手前'],['m以下','メートル以下'],['mg','ミリグラム'],['○','まる'],['×','ばつ'],['〜','から'],['（','、'],['）','、'],['「',''],['」',''],['…','']];
+function yomi(t){ for(const [a,b] of YOMI) t=t.split(a).join(b); return t.replace(/(\d)m(?![a-zA-Z])/g,'$1メートル'); }
+// ミャンマー語の声は日本語の文字を読めないので、（日本語）や「日本語」の部分を除いて読む
+function myClean(t){ return t.replace(/[぀-ヿ一-鿿々ー・、。「」（）()○×]+/g,' ').replace(/\s+/g,' ').trim(); }
+let spSeq=0, speaking=false;
+function stopSpeak(){ spSeq++; speaking=false; if(window.speechSynthesis) speechSynthesis.cancel(); if(AP){ try{ AP.pause(); }catch(e){} if(apResolve){ const r=apResolve; apResolve=null; r(); } } updSpk(); if(window.ksStopped) ksStopped(); }
+// parts = [{lang:'ja'|'my', text}]
+
+// ===== 録音の再生（スマホ公開版だけ。window.AUDIO_IDX があり http(s) で開いたとき） =====
+// AUDIO_IDX[キー] = [ファイル名, 開始バイト, 終了バイト]。まとめたmp3から1文分だけ取り出して再生する
+const AUD = (window.AUDIO_IDX && /^https?:/.test(location.protocol)) ? window.AUDIO_IDX : null;
+const AP = AUD ? new Audio() : null;
+const clipCache = new Map(), fileCache = new Map();
+let apResolve = null;
+if(AP){
+  // iPhoneは最初のタップの中で一度音を鳴らすと、その後は自動で再生できる
+  const unlock=()=>{ try{ const sr=8000,n=800,b=new ArrayBuffer(44+n*2),v=new DataView(b);
+      [[0,'RIFF'],[8,'WAVE'],[12,'fmt '],[36,'data']].forEach(([o,t])=>{ for(let i=0;i<4;i++) v.setUint8(o+i,t.charCodeAt(i)); });
+      v.setUint32(4,36+n*2,true); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true); v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true); v.setUint32(40,n*2,true);
+      if(!AP.src || AP.paused){ AP.src=URL.createObjectURL(new Blob([b],{type:'audio/wav'})); AP.play().catch(()=>{}); } }catch(e){} };
+  document.addEventListener('pointerdown', unlock, {once:true, capture:true});
+  document.addEventListener('touchend', unlock, {once:true, capture:true});
+}
+async function clipUrl(key){
+  if(clipCache.has(key)) return clipCache.get(key);
+  const [f,a,b]=AUD[key];
+  let blob=null;
+  if(!fileCache.has(f)){
+    const r=await fetch(f,{headers:{Range:'bytes='+a+'-'+b}});
+    if(r.status===206) blob=await r.blob();
+    else if(r.ok) fileCache.set(f, await r.arrayBuffer());   // 範囲指定が効かないときはファイルごと
+    else throw new Error('audio '+r.status);
+  }
+  blob = blob ? new Blob([blob],{type:'audio/mpeg'}) : new Blob([fileCache.get(f).slice(a,b+1)],{type:'audio/mpeg'});
+  const u=URL.createObjectURL(blob); clipCache.set(key,u); return u;
+}
+function playClip(key, my, nextKey){
+  return clipUrl(key).then(u=>{
+    if(my!==spSeq) return;
+    if(nextKey) clipUrl(nextKey).catch(()=>{});   // 次の文を先に取っておく
+    return new Promise((res,rej)=>{
+      const [,a,b]=AUD[key], rate=parseFloat($('rate').value)||1;
+      const w=setTimeout(()=>res(), ((b-a)/6000)/rate*1000+6000);
+      apResolve=()=>{ clearTimeout(w); res(); };
+      AP.onended=()=>{ clearTimeout(w); apResolve=null; res(); };
+      AP.onerror=()=>{ clearTimeout(w); apResolve=null; rej(new Error('play')); };
+      AP.src=u; AP.playbackRate=rate; AP.defaultPlaybackRate=rate;
+      const pr=AP.play(); if(pr) pr.catch(e=>{ clearTimeout(w); apResolve=null; rej(e); });
+    });
+  });
+}
+// 録音が使えないときの予備：その部分だけ端末の声で読む
+function ttsPart(p, my, onChunk){
+  return new Promise(res=>{
+    const v = p.lang==='ja'? vJa : vMy;
+    if(!window.speechSynthesis || !v){ if(onChunk) onChunk(p.text,p.lang); setTimeout(res, p.text.length*(p.lang==='ja'?170:90)/(parseFloat($('rate').value)||1)); return; }
+    const chunks=(p.lang==='ja'? yomi(p.text) : myClean(p.text)).match(/[^。။!?！？]+[。။!?！？]*/g)||[p.text]; let k=0;
+    const one=()=>{ if(my!==spSeq) return res(); if(k>=chunks.length) return res();
+      if(onChunk) onChunk(chunks[k],p.lang);
+      const u=new SpeechSynthesisUtterance(chunks[k++]); u.voice=v; u.lang=v.lang; u.rate=parseFloat($('rate').value)||1;
+      let d=false; const go=()=>{ if(d) return; d=true; clearTimeout(t); one(); }; u.onend=go; u.onerror=go;
+      const t=setTimeout(go, u.text.length*260/u.rate+8000); speechSynthesis.speak(u); };
+    one();
+  });
+}
+function speakAudio(parts, onDone, onChunk, my){
+  (async()=>{
+    for(const p of parts){
+      if(my!==spSeq) return;
+      const keys=(p.clips||[]).filter(k=>AUD[k]);
+      let failed=!keys.length;
+      for(let i=0;i<keys.length && !failed;i++){
+        if(my!==spSeq) return;
+        if(onChunk) onChunk(p.caps? (p.caps[p.clips.indexOf(keys[i])]||'') : p.text, p.lang);
+        try{ await playClip(keys[i], my, keys[i+1]); }catch(e){ if(i===0) failed=true; }
+      }
+      if(failed && p.text){ await ttsPart(p, my, onChunk); }
+    }
+    if(my!==spSeq) return; speaking=false; updSpk(); if(onDone) onDone();
+  })();
+}
+function speak(parts, onDone, onChunk){
+  stopSpeak();
+  const my=++spSeq; speaking=true; updSpk();
+  if(AUD && parts.some(p=>p.clips && p.clips.some(k=>AUD[k]))){ speakAudio(parts, onDone, onChunk, my); return; }
+  const list = parts.filter(p=>p.text && (p.lang==='ja'? vJa : vMy));
+  // 声がないときは、読む時間の目安だけ待って次へ（字幕だけで進む）
+  if(!window.speechSynthesis || !list.length){ const ms=parts.reduce((a,p)=>a+(p.text||'').length*(p.lang==='ja'?170:90),0)/(parseFloat($('rate').value)||1)+800; if(onChunk) onChunk(parts[0]&&parts[0].text||'', parts[0]&&parts[0].lang); setTimeout(()=>{ if(my!==spSeq) return; speaking=false; updSpk(); if(onDone) onDone(); }, ms); return; }
+  if(parts.some(p=>p.lang==='my') && !vMy && !myWarned){ myWarned=true; toast(IS_MOBILE? 'この端末にはミャンマー語の声がないため、ミャンマー語は文字で表示します' : 'ミャンマー語の声が見つかりません（Edge＋インターネット接続が必要です）'); }
+  let i=0;
+  const run=()=>{
+    if(my!==spSeq) return;
+    if(i>=list.length){ speaking=false; updSpk(); if(onDone) onDone(); return; }
+    const p=list[i++];
+    const chunks = (p.lang==='ja'? yomi(p.text) : myClean(p.text)).match(/[^。။!?！？]+[。။!?！？]*/g) || [p.text];
+    let k=0;
+    const one=()=>{
+      if(my!==spSeq) return;
+      if(k>=chunks.length){ run(); return; }
+      if(onChunk) onChunk(chunks[k], p.lang);
+      const u=new SpeechSynthesisUtterance(chunks[k++]);
+      u.voice = p.lang==='ja'? vJa : vMy; u.lang = u.voice.lang; u.rate=parseFloat($('rate').value)||1;
+      let done=false; const go=()=>{ if(done) return; done=true; clearTimeout(w); one(); };
+      u.onend=go; u.onerror=e=>{ if(e.error==='interrupted'||e.error==='canceled') return; go(); };
+      const w=setTimeout(()=>{ if(my===spSeq){ speechSynthesis.cancel(); go(); } }, u.text.length*260/u.rate+8000);
+      speechSynthesis.speak(u);
+    };
+    one();
+  };
+  run();
+}
+function langsToRead(){ return LANG==='ja'?['ja'] : LANG==='my'?['my'] : ['ja','my']; }
+function updSpk(){ const b=$('spkBtn'); if(!b) return; b.innerHTML = speaking? T('stop') : T('read'); b.classList.toggle('on',speaking); }
+// ===== 道路標識（道路標識、区画線及び道路標示に関する命令 別表第1・第2 を参考に簡略化して描画） =====
+const RED='#d7262b', BLUE='#1f5fae', YEL='#f6c400', BLK='#111', WHT='#fff', GRN='#1a8f3c';
+function _svg(inner, vb){ return '<svg viewBox="'+(vb||'0 0 100 100')+'" xmlns="http://www.w3.org/2000/svg" role="img">'+inner+'</svg>'; }
+function _ring(fill){ return '<circle cx="50" cy="50" r="46" fill="'+WHT+'"/><circle cx="50" cy="50" r="41" fill="'+(fill||WHT)+'" stroke="'+RED+'" stroke-width="9"/>'; }
+function _diamond(inner){ return '<rect x="17" y="17" width="66" height="66" rx="5" transform="rotate(45 50 50)" fill="'+BLK+'"/><rect x="20" y="20" width="60" height="60" rx="4" transform="rotate(45 50 50)" fill="'+YEL+'"/>'+inner; }
+function _blueSq(inner){ return '<rect x="6" y="6" width="88" height="88" rx="8" fill="'+WHT+'"/><rect x="10" y="10" width="80" height="80" rx="6" fill="'+BLUE+'"/>'+inner; }
+function _person(x,y,s,c){ s=s||1; c=c||WHT; return '<g transform="translate('+x+' '+y+') scale('+s+')" fill="'+c+'" stroke="'+c+'" stroke-linecap="round"><circle cx="0" cy="-22" r="5" stroke="none"/><path d="M0 -15 L-2 2" stroke-width="6"/><path d="M-2 2 L-8 18 M-2 2 L6 17" stroke-width="5" fill="none"/><path d="M0 -12 L-9 -2 M0 -12 L8 -4" stroke-width="4" fill="none"/></g>'; }
+const SIGNS = {
+  tomare: { ja:'一時停止（止まれ）', my:'ခဏရပ်ပါ (止まれ)', svg:_svg('<polygon points="4,10 96,10 50,92" fill="'+WHT+'"/><polygon points="12,15 88,15 50,82" fill="'+RED+'"/><text x="50" y="38" font-size="14" font-weight="700" fill="'+WHT+'" text-anchor="middle" font-family="sans-serif">止まれ</text><text x="50" y="55" font-size="9" font-weight="700" fill="'+WHT+'" text-anchor="middle" font-family="sans-serif">STOP</text>') },
+  jokou: { ja:'徐行', my:'အရှိန်လျှော့၍ ဖြည်းဖြည်းမောင်းပါ (徐行)', svg:_svg('<polygon points="4,10 96,10 50,92" fill="'+WHT+'" stroke="#999" stroke-width="1"/><polygon points="13,15.5 87,15.5 50,81" fill="'+WHT+'" stroke="'+RED+'" stroke-width="8" stroke-linejoin="round"/><text x="50" y="41" font-size="15" font-weight="700" fill="'+BLUE+'" text-anchor="middle" font-family="sans-serif">徐行</text><text x="50" y="54" font-size="8" font-weight="700" fill="'+BLUE+'" text-anchor="middle" font-family="sans-serif">SLOW</text>') },
+  shinnyu_kinshi: { ja:'車両進入禁止', my:'ယာဉ်များ ဝင်ခွင့်မပြု', svg:_svg('<circle cx="50" cy="50" r="46" fill="'+WHT+'"/><circle cx="50" cy="50" r="42" fill="'+RED+'"/><rect x="18" y="42" width="64" height="16" fill="'+WHT+'"/>') },
+  chusha_kinshi: { ja:'駐車禁止', my:'ယာဉ်ရပ်နားခြင်း (駐車) မပြု', svg:_svg(_ring(BLUE)+'<line x1="22" y1="22" x2="78" y2="78" stroke="'+RED+'" stroke-width="8"/>') },
+  chuteisha_kinshi: { ja:'駐停車禁止', my:'ယာဉ်ရပ်နားခြင်းနှင့် ခဏရပ်ခြင်း (駐停車) မပြု', svg:_svg(_ring(BLUE)+'<line x1="22" y1="22" x2="78" y2="78" stroke="'+RED+'" stroke-width="8"/><line x1="78" y1="22" x2="22" y2="78" stroke="'+RED+'" stroke-width="8"/>') },
+  max40: { ja:'最高速度（40km/h）', my:'အမြင့်ဆုံးအမြန်နှုန်း (တစ်နာရီ ၄၀ ကီလိုမီတာ)', svg:_svg(_ring()+'<text x="50" y="63" font-size="38" font-weight="700" fill="'+BLUE+'" text-anchor="middle" font-family="Arial,sans-serif">40</text>') },
+  min50: { ja:'最低速度（50km/h）', my:'အနိမ့်ဆုံးအမြန်နှုန်း (တစ်နာရီ ၅၀ ကီလိုမီတာ)', svg:_svg(_ring()+'<text x="50" y="58" font-size="34" font-weight="700" fill="'+BLUE+'" text-anchor="middle" font-family="Arial,sans-serif">50</text><rect x="30" y="65" width="40" height="5" fill="'+BLUE+'"/>') },
+  ippou: { ja:'一方通行', my:'တစ်လမ်းမောင်း', svg:_svg('<rect x="4" y="30" width="92" height="40" rx="4" fill="'+WHT+'"/><rect x="7" y="33" width="86" height="34" rx="3" fill="'+BLUE+'"/><polygon points="16,46 64,46 64,38 86,50 64,62 64,54 16,54" fill="'+WHT+'"/>') },
+  shitei_houkou: { ja:'指定方向外進行禁止（直進・左折のみ可）', my:'သတ်မှတ်ထားသော ဦးတည်ရာမှအပ မသွားရ (ရှေ့တည့်တည့်နှင့် ဘယ်ကွေ့သာ)', svg:_svg('<circle cx="50" cy="50" r="46" fill="'+WHT+'"/><circle cx="50" cy="50" r="42" fill="'+BLUE+'"/><path d="M56 80 V30" stroke="'+WHT+'" stroke-width="9" fill="none"/><polygon points="44,32 68,32 56,16" fill="'+WHT+'"/><path d="M56 62 H34" stroke="'+WHT+'" stroke-width="9" fill="none"/><polygon points="36,50 36,74 20,62" fill="'+WHT+'"/>') },
+  hokousha_senyou: { ja:'歩行者専用', my:'လမ်းလျှောက်သူများအတွက်သာ', svg:_svg('<circle cx="50" cy="50" r="46" fill="'+WHT+'"/><circle cx="50" cy="50" r="42" fill="'+BLUE+'"/>'+_person(40,58,1.2)+_person(62,64,0.85)) },
+  oudan_hodou: { ja:'横断歩道', my:'လူကူးမျဉ်းကြား', svg:_svg(_blueSq('<polygon points="50,16 86,82 14,82" fill="'+WHT+'"/><rect x="22" y="72" width="8" height="6" fill="'+BLK+'"/><rect x="36" y="72" width="8" height="6" fill="'+BLK+'"/><rect x="50" y="72" width="8" height="6" fill="'+BLK+'"/><rect x="64" y="72" width="8" height="6" fill="'+BLK+'"/>'+_person(50,66,0.95,BLK))) },
+  yusen_douro: { ja:'優先道路', my:'ဦးစားပေးလမ်း', svg:_svg(_blueSq('<rect x="42" y="18" width="16" height="64" fill="'+WHT+'"/><rect x="20" y="46" width="60" height="8" fill="'+WHT+'"/>')) },
+  chusha_ka: { ja:'駐車可', my:'ယာဉ်ရပ်နားနိုင်သည် (駐車可)', svg:_svg(_blueSq('<text x="50" y="72" font-size="58" font-weight="700" fill="'+WHT+'" text-anchor="middle" font-family="Arial,sans-serif">P</text>')) },
+  fumikiri: { ja:'踏切あり', my:'ရှေ့တွင် ရထားလမ်းကူး (踏切) ရှိသည်', svg:_svg(_diamond('<rect x="30" y="44" width="34" height="16" fill="'+BLK+'"/><rect x="58" y="36" width="12" height="24" fill="'+BLK+'"/><rect x="34" y="36" width="6" height="8" fill="'+BLK+'"/><circle cx="38" cy="64" r="5" fill="'+BLK+'"/><circle cx="52" cy="64" r="5" fill="'+BLK+'"/><circle cx="64" cy="64" r="5" fill="'+BLK+'"/><rect x="26" y="70" width="48" height="3" fill="'+BLK+'"/>')) },
+  gakkou: { ja:'学校、幼稚園、保育所等あり', my:'ရှေ့တွင် ကျောင်း၊ မူကြို စသည် ရှိသည်', svg:_svg(_diamond(_person(42,62,0.9,BLK)+_person(58,66,0.7,BLK))) },
+  shingou_ari: { ja:'信号機あり', my:'ရှေ့တွင် မီးပွိုင့် ရှိသည်', svg:_svg(_diamond('<rect x="40" y="24" width="20" height="52" rx="6" fill="'+BLK+'"/><circle cx="50" cy="34" r="6" fill="'+RED+'"/><circle cx="50" cy="50" r="6" fill="'+YEL+'" stroke="#333" stroke-width="1"/><circle cx="50" cy="66" r="6" fill="'+GRN+'"/>')) },
+  juji: { ja:'十形道路交差点あり', my:'ရှေ့တွင် လမ်းဆုံ (+ ပုံ) ရှိသည်', svg:_svg(_diamond('<rect x="45" y="24" width="10" height="52" fill="'+BLK+'"/><rect x="24" y="45" width="52" height="10" fill="'+BLK+'"/>')) },
+  shoshinsha: { ja:'初心運転者標識（初心者マーク）', my:'ကားမောင်းသူအသစ် အမှတ်အသား (初心者マーク)', svg:_svg('<path d="M50 18 L50 92 L22 70 L22 6 Z" fill="'+YEL+'" stroke="#333" stroke-width="1.5"/><path d="M50 18 L50 92 L78 70 L78 6 Z" fill="'+GRN+'" stroke="#333" stroke-width="1.5"/>') },
+  koureisha: { ja:'高齢運転者標識（高齢者マーク）', my:'သက်ကြီးကားမောင်းသူ အမှတ်အသား (高齢者マーク)', svg:_svg('<path d="M50 50 C30 50 14 40 18 24 C22 10 42 14 50 50 Z" fill="#f39800"/><path d="M50 50 C70 50 86 40 82 24 C78 10 58 14 50 50 Z" fill="'+YEL+'"/><path d="M50 50 C30 50 14 60 18 76 C22 90 42 86 50 50 Z" fill="#7cc242"/><path d="M50 50 C70 50 86 60 82 76 C78 90 58 86 50 50 Z" fill="'+GRN+'"/>') },
+  diamond_mark: { ja:'横断歩道又は自転車横断帯あり（路面の◇）', my:'ရှေ့တွင် လူကူးမျဉ်းကြား သို့မဟုတ် စက်ဘီးကူးလမ်း ရှိသည် (လမ်းပေါ်ရှိ ◇)', svg:_svg('<rect x="0" y="0" width="100" height="100" fill="#6b6b6b"/><polygon points="50,12 70,50 50,88 30,50" fill="none" stroke="'+WHT+'" stroke-width="5"/>') }
+};
+function signImg(id){ const s=SIGNS[id]; return s ? '<div class="sign">'+s.svg+'</div>' : ''; }
+
+// ===== 自転車関係の標識（色は教則付表3：記号と縁は白・地は青／通行止めは帯とわくが赤・記号は青・縁と地は白） =====
+function _bike(cx,cy,s,col){ s=s||1; col=col||WHT; const w=Math.max(2.5,4*s);
+  return '<g fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round">'+
+    '<circle cx="'+(cx-14*s)+'" cy="'+(cy+6*s)+'" r="'+(9*s)+'"/><circle cx="'+(cx+14*s)+'" cy="'+(cy+6*s)+'" r="'+(9*s)+'"/>'+
+    '<path d="M'+(cx-14*s)+' '+(cy+6*s)+' L'+(cx-4*s)+' '+(cy-8*s)+' L'+(cx+10*s)+' '+(cy-8*s)+' L'+(cx+14*s)+' '+(cy+6*s)+' M'+(cx-4*s)+' '+(cy-8*s)+' L'+(cx+1*s)+' '+(cy+6*s)+' L'+(cx+10*s)+' '+(cy-8*s)+' M'+(cx-7*s)+' '+(cy-13*s)+' L'+(cx-1*s)+' '+(cy-13*s)+' M'+(cx+10*s)+' '+(cy-8*s)+' L'+(cx+8*s)+' '+(cy-15*s)+' L'+(cx+13*s)+' '+(cy-15*s)+'"/></g>'; }
+function _blueDisc(inner){ return '<circle cx="50" cy="50" r="46" fill="'+WHT+'"/><circle cx="50" cy="50" r="42" fill="'+BLUE+'"/>'+inner; }
+Object.assign(SIGNS,{
+  jitensha_senyo:{ ja:'自転車専用', my:'စက်ဘီးသီးသန့်', svg:_svg(_blueDisc(_bike(50,50,1.35))) },
+  jitensha_hokousha:{ ja:'自転車及び歩行者専用（普通自転車歩道通行可）', my:'စက်ဘီးနှင့် လမ်းလျှောက်သူများအတွက်သာ', svg:_svg(_blueDisc(_person(34,66,1.0)+_bike(62,56,0.95))) },
+  heishin_ka:{ ja:'並進可', my:'ဘေးချင်းယှဉ်၍ စီးနိုင်သည်', svg:_svg(_blueDisc(_bike(50,36,0.9)+_bike(50,66,0.9))) },
+  jitensha_dome:{ ja:'自転車通行止め', my:'စက်ဘီး ဖြတ်သန်းခွင့်မပြု', svg:_svg(_ring()+_bike(50,50,1.25,BLUE)+'<line x1="22" y1="22" x2="78" y2="78" stroke="'+RED+'" stroke-width="8"/>') }
+});
+const IL = (()=>{
+const W='#fff', ROAD='#6b7280', SIDE='#d9d4c7', GRASS='#cfe8c4', LINE='#ffffff', YL='#f2c200', R='#d7262b', B='#1f5fae', G='#14843b', K='#222';
+const svg = (inner,bg) => '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">'+(bg?'<rect width="400" height="300" fill="'+bg+'"/>':'')+inner+'</svg>';
+// 上から見た車：中心(x,y)、向き deg（0=北向き/上）、色。運転席は右側（日本の右ハンドル）
+function car(x,y,deg,col,o){ o=o||{}; const w=o.w||24,h=o.h||42;
+  return '<g transform="translate('+x+' '+y+') rotate('+deg+')">'+
+   '<rect x="'+(-w/2)+'" y="'+(-h/2)+'" width="'+w+'" height="'+h+'" rx="6" fill="'+col+'" stroke="#111" stroke-width="1.2"/>'+
+   '<rect x="'+(-w/2+3)+'" y="'+(-h/2+7)+'" width="'+(w-6)+'" height="9" rx="2" fill="#bfe3ff"/>'+  // フロントガラス（前）
+   '<rect x="'+(-w/2+3)+'" y="'+(h/2-9)+'" width="'+(w-6)+'" height="5" rx="2" fill="#9cc8ea"/>'+
+   (o.driver?'<circle cx="'+(w/4)+'" cy="'+(-h/2+20)+'" r="3.5" fill="#333"/>':'')+
+   (o.blinkL?'<circle cx="'+(-w/2)+'" cy="'+(-h/2+3)+'" r="4" fill="#ffb300" stroke="#c77800"/>':'')+
+   (o.blinkR?'<circle cx="'+(w/2)+'" cy="'+(-h/2+3)+'" r="4" fill="#ffb300" stroke="#c77800"/>':'')+
+   (o.hazard?'<circle cx="'+(-w/2)+'" cy="'+(-h/2+3)+'" r="4" fill="#ffb300"/><circle cx="'+(w/2)+'" cy="'+(-h/2+3)+'" r="4" fill="#ffb300"/><circle cx="'+(-w/2)+'" cy="'+(h/2-3)+'" r="4" fill="#ffb300"/><circle cx="'+(w/2)+'" cy="'+(h/2-3)+'" r="4" fill="#ffb300"/>':'')+
+   (o.amb?'<rect x="'+(-w/2)+'" y="-3" width="'+w+'" height="6" fill="'+R+'"/><rect x="-5" y="-13" width="10" height="6" rx="2" fill="'+R+'"/><path d="M-14 -24 l-8 -6 M14 -24 l8 -6 M0 -26 v-8" stroke="'+R+'" stroke-width="2"/>':'')+
+   '</g>'; }
+// 矢印（パス＋先端）
+function arrow(d,col,wd){ col=col||'#ffde59'; wd=wd||5; const id='a'+Math.random().toString(36).slice(2,7);
+  return '<defs><marker id="'+id+'" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="'+col+'"/></marker></defs><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+wd+'" stroke-linecap="round" marker-end="url(#'+id+')"/>'; }
+function xmark(x,y,s,col){ s=s||14; col=col||R; return '<g stroke="'+col+'" stroke-width="6" stroke-linecap="round"><line x1="'+(x-s)+'" y1="'+(y-s)+'" x2="'+(x+s)+'" y2="'+(y+s)+'"/><line x1="'+(x+s)+'" y1="'+(y-s)+'" x2="'+(x-s)+'" y2="'+(y+s)+'"/></g>'; }
+function okmark(x,y,s,col){ s=s||14; col=col||G; return '<path d="M'+(x-s)+' '+y+' l'+(s*0.7)+' '+(s*0.8)+' l'+(s*1.4)+' '+(-s*1.6)+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'; }
+function tx(x,y,t,o){ o=o||{}; return '<text x="'+x+'" y="'+y+'" font-size="'+(o.s||16)+'" font-weight="'+(o.w||700)+'" fill="'+(o.c||K)+'" text-anchor="'+(o.a||'middle')+'"'+(o.st?' stroke="'+o.st+'" stroke-width="3" paint-order="stroke"':'')+'>'+t+'</text>'; }
+// 縦の道路（上下に走る2車線）：中心x、幅w
+function vroad(cx,w,o){ o=o||{}; let s='<rect x="'+(cx-w/2)+'" y="0" width="'+w+'" height="300" fill="'+ROAD+'"/>';
+  if(o.side!==false) s+='<rect x="'+(cx-w/2-28)+'" y="0" width="28" height="300" fill="'+SIDE+'"/><rect x="'+(cx+w/2)+'" y="0" width="28" height="300" fill="'+SIDE+'"/>';
+  s+= o.center==='yellow' ? '<rect x="'+(cx-2)+'" y="0" width="4" height="300" fill="'+YL+'"/>' : '<line x1="'+cx+'" y1="0" x2="'+cx+'" y2="300" stroke="'+LINE+'" stroke-width="3" stroke-dasharray="'+(o.solid?'none':'18 12')+'"/>';
+  return s; }
+// 上から見た人（頭と肩）
+function pTop(x,y,col){ return '<g><ellipse cx="'+x+'" cy="'+y+'" rx="9" ry="6" fill="'+(col||'#e07b39')+'"/><circle cx="'+x+'" cy="'+y+'" r="4.5" fill="#3b2a20"/></g>'; }
+// 横から見た人
+function pSide(x,y,s,o){ o=o||{}; s=s||1; const c=o.c||'#2f6fb0';
+  return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="0" cy="-44" r="8" fill="#f2c9a0" stroke="#333" stroke-width="1"/><path d="M-6 -52 q6 -6 12 0" fill="#3b2a20"/>'+
+   '<rect x="-7" y="-36" width="14" height="22" rx="4" fill="'+c+'"/><path d="M-4 -14 l-4 14 M4 -14 l5 14" stroke="#333" stroke-width="4" stroke-linecap="round"/>'+
+   '<path d="M-7 -32 l-7 12 M7 -32 l7 12" stroke="'+c+'" stroke-width="4" stroke-linecap="round"/>'+
+   (o.cane?'<path d="M14 -20 L24 0" stroke="#fff" stroke-width="3"/><path d="M14 -20 L24 0" stroke="#999" stroke-width="0.6"/>':'')+
+   (o.bag?'<rect x="-15" y="-34" width="10" height="14" rx="2" fill="#d33"/>':'')+'</g>'; }
+// 横から見た車（左向き＝前が左）
+function carSide(x,y,col,dir){ const f=dir==='right'?-1:1;
+  return '<g transform="translate('+x+' '+y+') scale('+f+' 1)"><path d="M-48 -8 L-44 -24 L-24 -26 L-12 -40 L22 -40 L36 -26 L48 -24 L48 -8 Z" fill="'+col+'" stroke="#111" stroke-width="1.2"/><path d="M-9 -37 L-19 -27 L2 -27 L2 -37 Z M6 -37 L6 -27 L30 -27 L20 -37 Z" fill="#bfe3ff"/><circle cx="-28" cy="-6" r="9" fill="#222"/><circle cx="28" cy="-6" r="9" fill="#222"/><circle cx="-28" cy="-6" r="4" fill="#aaa"/><circle cx="28" cy="-6" r="4" fill="#aaa"/><rect x="-49" y="-22" width="5" height="5" fill="#ffe680"/></g>'; }
+// 横から見た自転車（左向き）
+function bikeSide(x,y){ return '<g transform="translate('+x+' '+y+')"><circle cx="-16" cy="-10" r="10" fill="none" stroke="#222" stroke-width="2.5"/><circle cx="16" cy="-10" r="10" fill="none" stroke="#222" stroke-width="2.5"/><path d="M-16 -10 L-4 -26 L12 -26 L16 -10 M-4 -26 L2 -10 L12 -26 M-6 -30 L-2 -30" stroke="#1f5fae" stroke-width="2.5" fill="none"/><circle cx="2" cy="-58" r="7" fill="#f2c9a0"/><path d="M-4 -62 q6 -8 13 0 z" fill="'+'#ffcc00'+'"/><path d="M2 -51 L6 -32 L2 -10 M4 -46 L-6 -30" stroke="#d35400" stroke-width="5" stroke-linecap="round" fill="none"/></g>'; }
+function sign(id,x,y,s){ const sv=SIGNS[id].svg.replace('<svg ','<svg x="'+x+'" y="'+y+'" width="'+s+'" height="'+s+'" '); return sv; }
+function tile(x,y,w,h,inner,col){ return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="10" fill="'+(col||'#fff')+'" stroke="#c9d3df" stroke-width="2"/>'+inner; }
+function crosswalkH(x1,x2,y,h){ let s=''; for(let x=x1+4;x<x2-6;x+=14) s+='<rect x="'+x+'" y="'+y+'" width="8" height="'+h+'" fill="#fff"/>'; return s; }
+
+
+// ===== 自転車研修の絵 =====
+// 上から見た自転車：中心(x,y)、向き deg（0=北向き）。人はヘルメット（helmet:false で帽子なし）
+function bikeTop(x,y,deg,col,o){ o=o||{};
+  return '<g transform="translate('+x+' '+y+') rotate('+deg+')">'+
+   '<rect x="-2.2" y="-21" width="4.4" height="12" rx="2" fill="#222"/><rect x="-2.2" y="9" width="4.4" height="12" rx="2" fill="#222"/>'+
+   '<rect x="-1.5" y="-12" width="3" height="22" fill="'+(col||'#16a085')+'"/>'+
+   '<rect x="-9" y="-13" width="18" height="2.6" rx="1.3" fill="#333"/>'+
+   '<ellipse cx="0" cy="-1" rx="8" ry="6" fill="'+(o.shirt||'#e67e22')+'"/>'+
+   '<circle cx="0" cy="-3" r="'+(o.helmet===false?4.2:5)+'" fill="'+(o.helmet===false?'#3b2a20':'#f6c400')+'" stroke="#333" stroke-width="'+(o.helmet===false?0:0.8)+'"/>'+
+   (o.light?'<polygon points="-4,-21 4,-21 14,-60 -14,-60" fill="#fff6b0" opacity="0.55"/>':'')+
+   '</g>'; }
+// 横から見た自転車と人（dir:'left'＝左向き / 'right'）
+function bikeRide(x,y,dir,o){ o=o||{}; const f=dir==='right'?-1:1, c=o.shirt||'#d35400';
+  return '<g transform="translate('+x+' '+y+') scale('+f+' 1)">'+
+   '<circle cx="-18" cy="-12" r="12" fill="none" stroke="#222" stroke-width="3"/><circle cx="18" cy="-12" r="12" fill="none" stroke="#222" stroke-width="3"/>'+
+   '<path d="M-18 -12 L-4 -30 L14 -30 L18 -12 M-4 -30 L2 -12 L14 -30 M-8 -36 L0 -36 M14 -30 L12 -40 L18 -40" stroke="'+(o.frame||'#1f5fae')+'" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+   '<path d="M2 -62 L6 -36 L2 -12" stroke="'+c+'" stroke-width="6" stroke-linecap="round" fill="none"/>'+
+   (o.arm==='phone'? '<path d="M4 -56 L-10 -50 L-14 -58" stroke="'+c+'" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="-20" y="-68" width="8" height="13" rx="2" fill="#222"/>'
+     : o.arm==='umbrella'? '<path d="M4 -56 L-8 -52 L-12 -60" stroke="'+c+'" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M-12 -60 L-12 -92" stroke="#555" stroke-width="2"/><path d="M-40 -88 Q-12 -116 16 -88 Z" fill="#8e44ad"/>'
+     : '<path d="M4 -56 L-10 -42" stroke="'+c+'" stroke-width="5" stroke-linecap="round"/>')+
+   '<circle cx="3" cy="-70" r="8" fill="#f2c9a0" stroke="#333" stroke-width="1"/>'+
+   (o.helmet!==false?'<path d="M-6 -72 Q3 -86 12 -72 Z" fill="#f6c400" stroke="#333" stroke-width="1"/>':'<path d="M-5 -74 q8 -8 16 0" fill="#3b2a20"/>')+
+   (o.ear?'<circle cx="5" cy="-69" r="3" fill="#e53935"/><path d="M5 -69 q6 4 2 12" stroke="#e53935" stroke-width="1.5" fill="none"/>':'')+
+   (o.light?'<polygon points="-36,-38 -36,-30 -110,-18 -110,-52" fill="#fff6b0" opacity="0.6"/><rect x="-38" y="-38" width="5" height="7" fill="#ffe680"/>':'')+
+   (o.tail?'<circle cx="31" cy="-20" r="3.5" fill="#e53935"/>':'')+
+   (o.child?'<rect x="16" y="-46" width="14" height="12" rx="3" fill="#e67e22"/><circle cx="23" cy="-52" r="6" fill="#f2c9a0"/><path d="M17 -55 Q23 -64 29 -55 Z" fill="#5ac8fa"/>':'')+
+   '</g>'; }
+// 後ろから見た人（手信号）
+function bikeBack(x,y,arm){ const c='#d35400';
+  let a='';
+  if(arm==='left') a='<path d="M10 -58 L28 -58 L28 -80" stroke="'+c+'" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+  else if(arm==='right') a='<path d="M10 -58 L42 -58" stroke="'+c+'" stroke-width="6" stroke-linecap="round" fill="none"/>';
+  else a='<path d="M10 -58 L30 -38" stroke="'+c+'" stroke-width="6" stroke-linecap="round" fill="none"/>';
+  return '<g transform="translate('+x+' '+y+')"><rect x="-3" y="-30" width="6" height="30" rx="3" fill="#222"/><rect x="-16" y="-40" width="32" height="4" rx="2" fill="#333"/>'+
+   '<rect x="-10" y="-64" width="20" height="30" rx="6" fill="'+c+'"/><path d="M-10 -58 L-14 -40" stroke="'+c+'" stroke-width="6" stroke-linecap="round"/>'+a+
+   '<circle cx="0" cy="-74" r="9" fill="#f2c9a0"/><path d="M-10 -76 Q0 -92 10 -76 Z" fill="#f6c400" stroke="#333" stroke-width="1"/><circle cx="0" cy="-26" r="3" fill="#e53935"/></g>'; }
+function hBand(y,h,col){ return '<rect x="0" y="'+y+'" width="400" height="'+h+'" fill="'+(col||ROAD)+'"/>'; }
+function noEntry(x,y,s){ s=s||1; return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle r="16" fill="#fff" stroke="'+R+'" stroke-width="4"/><line x1="-11" y1="-11" x2="11" y2="11" stroke="'+R+'" stroke-width="4"/></g>'; }
+
+const IB = {};
+// 1 表紙
+IB.b_cover = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+vroad(200,130)+bikeTop(146,200,0,'#16a085')+arrow('M146 168 L146 130','#ffde59',4)+car(170,265,0,B)+car(232,90,180,'#c0392b')+arrow('M232 128 L232 168','#ffffff',4)+
+  '<rect x="260" y="160" width="130" height="120" rx="12" fill="#fff" stroke="#c9d3df" stroke-width="2"/>'+bikeRide(325,265,'left',{})+'');
+// 2 五則
+IB.b_rule5 = svg((()=>{ const t=(i,x,y,inner)=>tile(x,y,118,128,inner)+'<circle cx="'+(x+18)+'" cy="'+(y+18)+'" r="13" fill="#1f5fae"/>'+tx(x+18,y+23,String(i),{s:14,c:'#fff'});
+  const g=(x,y,c)=>'<g transform="translate('+x+' '+y+')">'+c+'</g>';
+  return t(1,12,10,g(12,10,'<rect x="40" y="30" width="44" height="90" fill="'+ROAD+'"/><line x1="62" y1="30" x2="62" y2="120" stroke="#fff" stroke-width="2" stroke-dasharray="8 6"/>'+bikeTop(48,86,0,'#16a085')+arrow('M48 60 L48 40','#ffde59',3)))+
+   t(2,141,10,g(141,10,'<rect x="22" y="40" width="74" height="26" rx="6" fill="#2b2f36"/><circle cx="36" cy="53" r="8" fill="#555"/><circle cx="59" cy="53" r="8" fill="#555"/><circle cx="82" cy="53" r="8" fill="#e53935"/>'+sign('tomare',37,72,46)))+
+   t(3,270,10,g(270,10,'<rect width="118" height="128" rx="10" fill="#141a2e"/>'+bikeRide(78,112,'left',{light:true,tail:true}).replace('scale(1 1)','scale(0.8 0.8)')))+
+   t(4,76,150,g(76,150,'<rect x="24" y="40" width="34" height="52" rx="4" fill="#f6c400" stroke="#b8860b" stroke-width="2"/><rect x="24" y="34" width="34" height="12" rx="5" fill="#fff"/>'+xmark(84,66,18)))+
+   t(5,206,150,g(206,150,'<path d="M24 86 Q59 6 94 86 Z" fill="#f6c400" stroke="#333" stroke-width="3"/><rect x="20" y="84" width="78" height="10" rx="4" fill="#333"/>'+okmark(96,30,12)));
+ })(),'#eef2f7');
+// 3 車両の仲間
+IB.b_vehicle = svg('<rect width="400" height="300" fill="#dfeefc"/><rect x="0" y="150" width="400" height="110" fill="'+ROAD+'"/><rect x="0" y="260" width="400" height="40" fill="'+SIDE+'"/><rect x="0" y="130" width="400" height="20" fill="'+SIDE+'"/>'+
+  carSide(250,236,B)+bikeRide(90,248,'left',{})+'<path d="M40 112 h300" stroke="#1f5fae" stroke-width="4"/><path d="M40 112 v14 M340 112 v14" stroke="#1f5fae" stroke-width="4"/>'+
+  '<rect x="130" y="70" width="140" height="40" rx="8" fill="#1f5fae"/>'+tx(200,98,'= 🚗',{s:20,c:'#fff'}));
+// 4 左側通行・逆走は×
+IB.b_left = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+vroad(200,140)+bikeTop(142,210,0,'#16a085')+arrow('M142 178 L142 140','#ffde59',4)+
+  bikeTop(176,80,180,'#c0392b',{shirt:'#7f8c8d'})+arrow('M176 112 L176 150','#e53935',4)+xmark(200,90,16)+car(240,230,180,'#8e44ad')+okmark(110,200,12));
+// 5 自転車レーン・矢羽根・自転車道
+IB.b_lane = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+
+  '<rect x="20" y="0" width="160" height="300" fill="'+ROAD+'"/><rect x="20" y="0" width="34" height="300" fill="#2f80d1"/><line x1="56" y1="0" x2="56" y2="300" stroke="#fff" stroke-width="3"/>'+
+  '<g fill="#fff">'+[60,190].map(y=>'<g transform="translate(37 '+y+') scale(0.55)">'+'<circle cx="-14" cy="6" r="9" fill="none" stroke="#fff" stroke-width="4"/><circle cx="14" cy="6" r="9" fill="none" stroke="#fff" stroke-width="4"/><path d="M-14 6 L-4 -8 L10 -8 L14 6 M-4 -8 L1 6 L10 -8" stroke="#fff" stroke-width="4" fill="none"/></g><polygon points="'+(37-8)+','+(y-40)+' 37,'+(y-54)+' '+(37+8)+','+(y-40)+'" fill="#fff"/>').join('')+'</g>'+
+  bikeTop(37,130,0,'#16a085')+car(110,220,0,B)+
+  '<rect x="220" y="0" width="160" height="300" fill="'+ROAD+'"/><line x1="300" y1="0" x2="300" y2="300" stroke="#fff" stroke-width="3" stroke-dasharray="16 12"/>'+
+  [30,90,150,210,270].map(y=>'<path d="M228 '+(y+14)+' L242 '+y+' L256 '+(y+14)+' L252 '+(y+18)+' L242 '+(y+8)+' L232 '+(y+18)+' Z" fill="#2f80d1"/>').join('')+
+  bikeTop(242,160,0,'#16a085')+car(275,240,0,'#7f8c8d')+'<rect x="0" y="0" width="400" height="300" fill="none"/>');
+// 6 路側帯
+IB.b_roadside = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+
+  '<rect x="20" y="0" width="160" height="300" fill="'+ROAD+'"/><rect x="20" y="0" width="30" height="300" fill="#8a9099"/><rect x="50" y="0" width="4" height="300" fill="#fff"/>'+bikeTop(36,150,0,'#16a085')+pTop(36,60)+okmark(150,40,14)+
+  '<rect x="220" y="0" width="160" height="300" fill="'+ROAD+'"/><rect x="220" y="0" width="30" height="300" fill="#8a9099"/><rect x="250" y="0" width="3" height="300" fill="#fff"/><rect x="256" y="0" width="3" height="300" fill="#fff"/>'+bikeTop(236,150,0,'#c0392b',{shirt:'#7f8c8d'})+xmark(236,150,20)+pTop(236,60));
+// 7 歩道を通れるとき
+IB.b_sidewalk1 = svg(tile(14,20,150,200,sign('jitensha_hokousha',24,30,130))+
+  tile(180,14,100,82,'<circle cx="230" cy="52" r="0"/>')+pSide(230,88,0.75,{c:'#e67e22',bag:true})+tx(258,40,'13',{s:16,c:'#1f5fae'})+
+  tile(288,14,100,82,'')+pSide(338,88,0.75,{c:'#555',cane:true})+tx(366,40,'70',{s:16,c:'#1f5fae'})+
+  tile(180,108,208,112,'<polygon points="206,200 222,150 238,200" fill="#f39800"/><rect x="200" y="196" width="44" height="6" fill="#333"/>'+car(300,160,90,'#7f8c8d',{w:22,h:40})+car(350,160,90,'#7f8c8d',{w:22,h:40}))+
+  '<rect x="14" y="232" width="374" height="56" rx="10" fill="#fff" stroke="#c9d3df"/>'+bikeTop(60,262,90,'#16a085')+arrow('M90 262 L150 262','#1f5fae',4)+tx(270,270,'🚶 優先',{s:20,c:'#14843b'}),'#eef2f7');
+// 8 歩道の通り方
+IB.b_sidewalk2 = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="40" y="0" width="150" height="300" fill="#e8e1d2"/><rect x="186" y="0" width="8" height="300" fill="#bbb"/><rect x="194" y="0" width="170" height="300" fill="'+ROAD+'"/>'+
+  '<rect x="118" y="0" width="68" height="300" fill="#cfe2f3" opacity="0.6"/>'+bikeTop(152,210,0,'#16a085')+arrow('M152 180 L152 160','#1f5fae',3)+tx(152,150,'徐行',{s:13,c:'#1f5fae'})+
+  pTop(80,120)+pTop(150,70,'#8e44ad')+tx(270,40,'🔔',{s:30})+xmark(270,32,18)+car(240,230,0,B));
+// 9 信号の見方
+IB.b_signal = svg('<rect x="20" y="40" width="160" height="56" rx="10" fill="#2b2f36"/><circle cx="56" cy="68" r="17" fill="#0aa37f"/><circle cx="100" cy="68" r="17" fill="#555"/><circle cx="144" cy="68" r="17" fill="#555"/>'+
+  bikeRide(100,250,'left',{}).replace('translate(100 250)','translate(100 250) scale(1)')+
+  '<rect x="250" y="20" width="70" height="140" rx="10" fill="#2b2f36"/><rect x="262" y="32" width="46" height="54" rx="6" fill="#401818"/><rect x="262" y="94" width="46" height="54" rx="6" fill="#0aa37f"/>'+
+  '<circle cx="285" cy="108" r="6" fill="#fff"/><path d="M285 114 L285 132 M285 120 L276 128 M285 120 L294 126 M285 132 L278 144 M285 132 L292 144" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'+
+  '<rect x="230" y="166" width="110" height="34" rx="4" fill="#fff" stroke="#1f5fae" stroke-width="2"/>'+tx(285,189,'歩行者・自転車専用',{s:11.5,c:'#1f5fae'})+bikeRide(300,280,'left',{}),'#eef2f7');
+// 10 一時停止
+IB.b_stop = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="90" width="400" height="80" fill="'+ROAD+'"/><rect x="150" y="170" width="90" height="130" fill="'+ROAD+'"/>'+
+  '<rect x="0" y="40" width="140" height="50" fill="#b9a68f"/><rect x="250" y="40" width="150" height="50" fill="#b9a68f"/><rect x="0" y="170" width="140" height="70" fill="#b9a68f"/><rect x="250" y="170" width="150" height="70" fill="#b9a68f"/>'+
+  '<rect x="150" y="176" width="45" height="5" fill="#fff"/>'+sign('tomare',96,240,52)+bikeTop(162,206,0,'#16a085')+'<path d="M150 196 q-30 -30 -60 -40" stroke="#ffde59" stroke-width="3" stroke-dasharray="6 5" fill="none"/><path d="M174 196 q30 -30 60 -40" stroke="#ffde59" stroke-width="3" stroke-dasharray="6 5" fill="none"/>'+car(330,150,270,'#c0392b')+tx(205,280,'STOP',{s:18,c:R,st:'#fff'}));
+// 11 直進・左折
+IB.b_cross = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="100" width="400" height="100" fill="'+ROAD+'"/><rect x="150" y="0" width="100" height="300" fill="'+ROAD+'"/>'+
+  '<line x1="200" y1="200" x2="200" y2="300" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/><line x1="200" y1="0" x2="200" y2="100" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/>'+
+  crosswalkH(150,250,206,22)+'<line x1="150" y1="232" x2="250" y2="232" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>'+
+  bikeTop(157,150,0,'#16a085')+arrow('M157 126 L157 30','#ffde59',4)+bikeTop(157,268,0,'#2f80d1',{shirt:'#8e44ad'})+arrow('M157 244 C 157 200, 152 186, 110 182','#ffffff',4)+car(225,60,180,'#c0392b'));
+// 12 二段階右折（①まっすぐ→②右に向きを変えて待つ→③青で進む）
+IB.b_right = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="100" width="400" height="100" fill="'+ROAD+'"/><rect x="150" y="0" width="100" height="300" fill="'+ROAD+'"/>'+
+  '<line x1="200" y1="200" x2="200" y2="300" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/><line x1="0" y1="150" x2="150" y2="150" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/><line x1="250" y1="150" x2="400" y2="150" stroke="#fff" stroke-width="3" stroke-dasharray="14 10"/>'+
+  bikeTop(158,270,0,'#16a085')+arrow('M158 248 L158 100','#ffde59',5)+bikeTop(146,88,90,'#16a085')+arrow('M168 108 L380 108','#ffde59',5)+
+  '<circle cx="158" cy="232" r="13" fill="#1f5fae"/>'+tx(158,237,'1',{s:14,c:'#fff'})+'<circle cx="122" cy="80" r="13" fill="#1f5fae"/>'+tx(122,85,'2',{s:14,c:'#fff'})+'<circle cx="320" cy="90" r="13" fill="#1f5fae"/>'+tx(320,95,'3',{s:14,c:'#fff'})+
+  '<path d="M190 210 C 200 170, 230 140, 260 128" stroke="#e53935" stroke-width="4" fill="none" stroke-dasharray="8 6"/>'+xmark(232,148,12));
+// 13 横断歩道（歩行者が多いときは降りて押す）
+IB.b_crosswalk = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="90" width="400" height="120" fill="'+ROAD+'"/>'+(()=>{let s='';for(let x=150;x<250;x+=0){break;}for(let y=96;y<204;y+=16) s+='<rect x="150" y="'+y+'" width="100" height="9" fill="#fff"/>';return s;})()+
+  pTop(180,130)+pTop(214,170,'#8e44ad')+pTop(196,110,'#16a085')+
+  '<g>'+pTop(232,150,'#e67e22')+bikeTop(244,150,0,'#2f80d1',{helmet:false})+'</g>'+tx(300,250,'🚶‍♂️🚲',{s:26})+okmark(350,244,12)+
+  bikeTop(200,186,0,'#c0392b',{shirt:'#7f8c8d'})+xmark(222,186,14)+car(60,180,90,'#7f8c8d'));
+// 14 踏切
+IB.b_rail = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+vroad(200,120,{side:false})+'<rect x="0" y="95" width="400" height="60" fill="#a39e93"/><rect x="0" y="108" width="400" height="5" fill="#666"/><rect x="0" y="137" width="400" height="5" fill="#666"/>'+
+  (()=>{let s='';for(let x=4;x<400;x+=16)s+='<rect x="'+x+'" y="102" width="6" height="46" fill="#7a5c3e" opacity="0.6"/>';return s;})()+
+  '<rect x="140" y="165" width="60" height="5" fill="#fff"/>'+bikeTop(150,192,0,'#16a085')+'<rect x="126" y="160" width="8" height="22" fill="#333"/><rect x="128" y="118" width="4" height="44" fill="#f6c400"/>'+
+  '<path d="M162 180 q14 0 18 -14" stroke="#ffde59" stroke-width="3" fill="none"/>'+tx(270,215,'STOP',{s:18,c:R,st:'#fff'})+car(230,230,0,B));
+// 15 手信号（後ろから見た図）
+IB.b_hand = svg(tile(10,20,120,260,bikeBack(62,240,'left'))+tile(140,20,120,260,bikeBack(186,240,'right'))+tile(270,20,120,260,bikeBack(316,240,'stop'))+
+  arrow('M48 50 L22 50','#1f5fae',5)+arrow('M222 50 L248 50','#1f5fae',5)+'<rect x="300" y="38" width="32" height="24" rx="4" fill="#e53935"/>'+tx(316,56,'■',{s:14,c:'#fff'}),'#eef2f7');
+// 16 ながらスマホ
+IB.b_sumaho = svg('<rect width="400" height="300" fill="#dfeefc"/><rect x="0" y="230" width="400" height="70" fill="'+ROAD+'"/>'+bikeRide(200,262,'left',{arm:'phone'})+xmark(200,150,40)+tx(330,80,'12,000',{s:26,c:R})+tx(330,106,'円',{s:16,c:R}));
+// 17 お酒
+IB.b_alcohol = svg('<rect width="400" height="300" fill="#eef2f7"/><rect x="60" y="80" width="70" height="110" rx="6" fill="#f6c400" stroke="#b8860b" stroke-width="3"/><rect x="60" y="68" width="70" height="26" rx="10" fill="#fff"/><path d="M130 110 q30 0 30 30 q0 26 -30 26" stroke="#b8860b" stroke-width="6" fill="none"/>'+
+  bikeRide(290,240,'left',{})+xmark(200,150,60)+tx(200,280,'0.0',{s:1}));
+// 18 並進・二人乗り・傘・イヤホン
+IB.b_ban = svg((()=>{ const t=(x,y,inner)=>tile(x,y,186,136,inner)+xmark(x+160,y+24,12);
+  const g=(x,y,c)=>'<g transform="translate('+x+' '+y+')">'+c+'</g>';
+  return t(8,8,'<rect x="20" y="20" width="160" height="110" fill="'+ROAD+'" opacity="0.15"/>'+bikeTop(70,80,90,'#16a085')+bikeTop(70,110,90,'#2f80d1',{shirt:'#8e44ad'}))+
+   t(206,8,g(206,8,bikeRide(95,128,'left',{}).replace('</g>','')+'<circle cx="24" cy="-60" r="7" fill="#f2c9a0"/><path d="M24 -53 L22 -34" stroke="#8e44ad" stroke-width="6" stroke-linecap="round"/></g>'))+
+   t(8,156,g(8,156,bikeRide(95,128,'left',{arm:'umbrella'})))+
+   t(206,156,g(206,156,bikeRide(95,128,'left',{ear:true})));
+ })(),'#eef2f7');
+// 19 夜はライト
+IB.b_night = svg('<rect width="400" height="300" fill="#141a2e"/><circle cx="350" cy="40" r="16" fill="#f5f3ce"/><circle cx="342" cy="36" r="15" fill="#141a2e"/><rect x="0" y="200" width="400" height="100" fill="#3a3f4b"/>'+
+  bikeRide(250,262,'left',{light:true,tail:true})+'<circle cx="281" cy="242" r="6" fill="#e53935" opacity="0.6"/>');
+// 20 出会い頭
+IB.b_danger1 = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="100" width="400" height="80" fill="'+ROAD+'"/><rect x="160" y="0" width="70" height="300" fill="'+ROAD+'"/>'+
+  '<rect x="0" y="20" width="150" height="70" fill="#b9a68f"/><rect x="240" y="20" width="160" height="70" fill="#b9a68f"/><rect x="0" y="190" width="150" height="110" fill="#b9a68f"/><rect x="240" y="190" width="160" height="110" fill="#b9a68f"/>'+
+  bikeTop(170,215,0,'#16a085')+arrow('M170 190 L170 170','#ffde59',4)+car(310,160,270,'#c0392b')+arrow('M280 160 L250 160','#ffffff',4)+
+  '<polygon points="200,140 210,150 222,142 216,156 228,162 214,164 214,176 206,166 194,172 198,160 186,154 200,152" fill="#ffde59" stroke="#e53935" stroke-width="2"/>'+tx(60,250,'54.7%',{s:24,c:'#fff',st:'#333'}));
+// 21 左折の巻き込み・死角
+IB.b_danger2 = svg('<rect width="400" height="300" fill="'+GRASS+'"/><rect x="0" y="40" width="400" height="90" fill="'+ROAD+'"/><rect x="140" y="130" width="130" height="170" fill="'+ROAD+'"/>'+
+  '<g transform="translate(190 210)"><rect x="-17" y="-60" width="34" height="120" rx="4" fill="#ecf0f1" stroke="#333" stroke-width="1.5"/><rect x="-17" y="-60" width="34" height="26" rx="4" fill="#1f5fae"/><rect x="-13" y="-56" width="26" height="8" fill="#bfe3ff"/><circle cx="-17" cy="-56" r="4" fill="#ffb300"/></g>'+
+  '<path d="M150 150 L172 150 L172 270 L150 270 Z" fill="#e53935" opacity="0.35"/>'+bikeTop(158,215,0,'#16a085')+xmark(158,180,12)+arrow('M190 146 C 186 116, 170 104, 120 100','#ffffff',4));
+// 22 ドア・雨の日
+IB.b_danger3 = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+vroad(200,140)+car(150,140,0,'#7f8c8d')+'<rect x="162" y="132" width="20" height="5" fill="#7f8c8d" stroke="#111" transform="rotate(35 162 132)"/>'+
+  bikeTop(166,250,0,'#16a085')+arrow('M166 224 L166 190','#ffde59',4)+'<polygon points="180,150 190,158 200,150 196,164 208,170 194,172 194,184 186,174 176,180 180,168 168,162 182,160" fill="#ffde59" stroke="#e53935" stroke-width="2"/>'+
+  '<g transform="translate(330 70)"><path d="M-40 0 Q0 -40 40 0 Z" fill="#8e44ad"/>'+[[-30,14],[-10,24],[10,14],[30,24],[-20,40],[20,40]].map(([x,y])=>'<path d="M'+x+' '+y+' l-4 10" stroke="#5ac8fa" stroke-width="3"/>').join('')+'</g>');
+// 23 車に追い越されるとき
+IB.b_side = svg('<rect width="400" height="300" fill="'+GRASS+'"/>'+vroad(200,140)+bikeTop(138,170,0,'#16a085')+arrow('M138 140 L138 110','#ffde59',4)+car(184,190,0,B)+arrow('M184 160 L184 120','#ffffff',3)+
+  '<path d="M146 210 h22" stroke="#ffde59" stroke-width="3"/><path d="M146 204 v12 M168 204 v12" stroke="#ffde59" stroke-width="3"/>'+arrow('M128 170 L116 170','#1f5fae',3));
+// 24 青切符
+IB.b_aokippu = svg('<rect x="40" y="30" width="320" height="240" rx="14" fill="#1f5fae"/><rect x="56" y="46" width="288" height="208" rx="8" fill="#eaf2ff"/>'+
+  [['📱','12,000'],['🚦','6,000'],['🛑','5,000'],['👥','3,000']].map((r,i)=>tx(110,95+i*46,r[0],{s:26,w:400})+tx(300,95+i*46,r[1]+' 円',{s:26,c:'#1f5fae',a:'end'})).join(''),'#f4f7fb');
+// 25 ヘルメット
+IB.b_helmet = svg('<rect width="400" height="300" fill="#eef2f7"/><g transform="translate(150 160) scale(2.2)"><circle cx="0" cy="0" r="22" fill="#f2c9a0" stroke="#333"/><path d="M-26 -2 Q0 -48 26 -2 Z" fill="#f6c400" stroke="#333" stroke-width="1.5"/><path d="M-20 4 L-14 20 M20 4 L14 20" stroke="#333" stroke-width="2"/></g>'+
+  okmark(300,110,22)+tx(310,220,'×1.4',{s:30,c:R})+tx(310,250,'⚠',{s:20}));
+// 26 点検・防犯登録
+IB.b_check = svg('<rect width="400" height="300" fill="#eef2f7"/><g transform="translate(-110 -140) scale(1.6)">'+bikeRide(200,250,'left',{helmet:false,tail:true})+'<rect x="-36" y="-34" width="7" height="6" rx="1" fill="#ffe680" stroke="#333" stroke-width="0.6"/></g>'+
+  [[198,199,96,120,'ブレーキ'],[186,214,60,175,'ライト'],[181,258,110,282,'タイヤ'],[260,228,330,200,'反射材'],[212,196,240,96,'ベル']].map(([x,y,lx,ly,t])=>'<line x1="'+x+'" y1="'+y+'" x2="'+lx+'" y2="'+ly+'" stroke="#1f5fae" stroke-width="2"/><circle cx="'+x+'" cy="'+y+'" r="4" fill="#1f5fae"/><rect x="'+(lx-34)+'" y="'+(ly-13)+'" width="68" height="24" rx="12" fill="#1f5fae"/>'+tx(lx,ly+5,t,{s:13,c:'#fff'})).join('')+'<rect x="270" y="40" width="110" height="50" rx="6" fill="#fff" stroke="#e53935" stroke-width="2"/>'+tx(325,72,'防犯登録',{s:16,c:'#e53935'}));
+// 27 保険・高額賠償
+IB.b_insurance = svg('<rect width="400" height="300" fill="#eef2f7"/><rect x="40" y="40" width="150" height="200" rx="8" fill="#fff" stroke="#888" stroke-width="2"/><path d="M60 80 h110 M60 105 h110 M60 130 h80" stroke="#bbb" stroke-width="6"/>'+
+  '<path d="M115 160 l30 12 v24 q0 26 -30 38 q-30 -12 -30 -38 v-24 Z" fill="#14843b"/>'+okmark(115,198,12,'#fff')+tx(300,130,'9,521',{s:40,c:R})+tx(300,170,'万円',{s:22,c:R})+bikeRide(300,270,'left',{}).replace('scale(1 1)','scale(0.6 0.6)'));
+// 28 子ども乗せ
+IB.b_child = svg('<rect width="400" height="300" fill="#dfeefc"/><rect x="0" y="240" width="400" height="60" fill="'+SIDE+'"/>'+bikeRide(200,262,'left',{child:true})+okmark(320,80,18));
+// 29 駐輪
+IB.b_park = svg('<rect width="400" height="300" fill="#e8e1d2"/><rect x="0" y="200" width="400" height="40" fill="#f6c400"/>'+(()=>{let s='';for(let x=6;x<400;x+=14) s+='<rect x="'+x+'" y="206" width="8" height="28" rx="3" fill="#e0a800"/>';return s;})()+
+  [60,110,160].map(x=>bikeTop(x,110,0,'#16a085',{helmet:false}).replace(/<ellipse[^>]*>|<circle[^>]*>/g,'')).join('')+'<rect x="30" y="140" width="160" height="6" fill="#666"/>'+tx(110,50,'P',{s:34,c:'#1f5fae'})+okmark(200,60,14)+
+  bikeTop(300,220,90,'#c0392b',{helmet:false}).replace(/<ellipse[^>]*>|<circle[^>]*>/g,'')+xmark(300,220,22));
+// 30 事故のとき
+IB.b_accident = I_acc();
+// 31 まとめ
+IB.b_end = svg('<rect x="40" y="40" width="190" height="220" rx="12" fill="#fff" stroke="#c9d3df" stroke-width="3"/>'+[0,1,2,3,4].map(i=>okmark(70,80+i*38,10)+'<rect x="94" y="'+(74+i*38)+'" width="'+(110-i*8)+'" height="12" rx="5" fill="#d6dbe3"/>').join('')+
+  bikeRide(320,250,'left',{}),'#f4f7fb');
+function I_acc(){ const t=(i,x,y,inner)=> tile(x,y,180,130,inner)+'<circle cx="'+(x+22)+'" cy="'+(y+22)+'" r="16" fill="#1f5fae"/>'+tx(x+22,y+28,String(i),{s:16,c:'#fff'});
+  const g=(x,y,c)=>'<g transform="translate('+x+' '+y+')">'+c+'</g>';
+  return svg(t(1,12,12,g(12,12,bikeTop(100,70,90,'#16a085')))+t(2,208,12,g(208,12,'<rect x="66" y="40" width="48" height="48" rx="8" fill="#fff" stroke="#e53935" stroke-width="3"/><rect x="84" y="46" width="12" height="36" fill="#e53935"/><rect x="72" y="58" width="36" height="12" fill="#e53935"/>'))+
+    t(3,12,158,g(12,158,'<polygon points="90,30 60,92 120,92" fill="none" stroke="#e53935" stroke-width="8"/>'))+
+    t(4,208,158,g(208,158,'<rect x="40" y="30" width="34" height="64" rx="6" fill="#333"/><rect x="44" y="38" width="26" height="44" fill="#5ac8fa"/>'+tx(120,58,'110',{s:26,c:'#1f5fae'})+tx(120,94,'119',{s:26,c:R}))),'#eef2f7'); }
+
+return IB;
+})();
+const SLIDE_TEXT={};
+Object.assign(SLIDE_TEXT, {
+ b_cover: {
+  tJa:"日本の自転車ルール",
+  tMy:"ဂျပန်နိုင်ငံ၏ စက်ဘီးစည်းကမ်းများ",
+  pts:[
+   ["株式会社ミストラルサービスの研修です","Mistral Service Co., Ltd. ၏ သင်တန်း ဖြစ်ပါသည်"],
+   ["目的：安全に乗る・違反しない・事故の責任を知る","ရည်ရွယ်ချက် – ဘေးကင်းစွာ စီးရန်၊ စည်းကမ်း မချိုးဖောက်ရန်၊ မတော်တဆမှု၏ တာဝန်ကို သိရန်"],
+   ["スライドは全部で31枚。絵と音声で学ぶ","ဆလိုက် စုစုပေါင်း 31 ခု။ ပုံနှင့် အသံဖြင့် လေ့လာမည်"],
+   ["日本は左側通行。ミャンマーとは反対","ဂျပန်တွင် ဘယ်ဘက်မှ သွားခြင်း။ မြန်မာနှင့် ပြောင်းပြန်"],
+   ["自転車も道路の左側を走る","စက်ဘီးလည်း လမ်း၏ ဘယ်ဘက်မှ စီးရပါသည်"]
+  ],
+  nJa:"これは、株式会社ミストラルサービスの研修です。この研修では、日本で自転車に乗るときのルールを学びます。目的は三つです。安全に乗ること、ルールに違反しないこと、そして、事故を起こしたときにどんな責任があるかを知ることです。スライドは全部で31枚あります。絵を見ながら、音声を聞いてください。日本では、車も自転車も道路の左側を通ります。ミャンマーとは反対ですから、いつも左側と覚えておきましょう。",
+  nMy:"ဤသင်တန်းသည် မစ်စထရယ် ဆားဗစ် ကုမ္ပဏီ၏ သင်တန်း ဖြစ်ပါသည်။ ဤသင်တန်းတွင် ဂျပန်နိုင်ငံ၌ စက်ဘီးစီးရာတွင် လိုက်နာရမည့် စည်းကမ်းများကို လေ့လာပါမည်။ ရည်ရွယ်ချက် သုံးခု ရှိပါသည်။ ဘေးကင်းစွာ စီးရန်၊ စည်းကမ်း မချိုးဖောက်ရန်နှင့် မတော်တဆမှု ဖြစ်ခဲ့လျှင် မည်သည့် တာဝန်များ ရှိသည်ကို သိရန် ဖြစ်ပါသည်။ ဆလိုက် စုစုပေါင်း 31 ခု ရှိပါသည်။ ပုံကို ကြည့်ရင်း အသံကို နားထောင်ပါ။ ဂျပန်တွင် ကားရော စက်ဘီးပါ လမ်း၏ ဘယ်ဘက်မှ သွားပါသည်။ မြန်မာနှင့် ပြောင်းပြန် ဖြစ်သောကြောင့် အမြဲ ဘယ်ဘက်ဟု မှတ်ထားပါ။"
+ },
+ b_rule5: {
+  tJa:"自転車安全利用五則",
+  tMy:"စက်ဘီး ဘေးကင်းစွာ အသုံးပြုရန် စည်းကမ်း 5 ချက်",
+  pts:[
+   ["①車道が原則、左側を通行　歩道は例外、歩行者を優先","① ကားလမ်းပေါ်တွင် စီးခြင်းသည် မူလစည်းကမ်း၊ ဘယ်ဘက်မှ သွားပါ။ လူသွားလမ်းသည် ခြွင်းချက်၊ လမ်းလျှောက်သူကို ဦးစားပေးပါ"],
+   ["②交差点では信号と一時停止を守って、安全確認","② လမ်းဆုံတွင် မီးပွိုင့်နှင့် ခဏရပ်တန့်ခြင်းကို လိုက်နာပြီး ဘေးကင်းကြောင်း စစ်ဆေးပါ"],
+   ["③夜間はライトを点灯","③ ညအချိန်တွင် မီးဖွင့်ပါ"],
+   ["④飲酒運転は禁止","④ အရက်သောက်၍ စီးခြင်းကို တားမြစ်သည်"],
+   ["⑤ヘルメットを着用","⑤ ဦးထုပ်ဆောင်းပါ"]
+  ],
+  nJa:"自転車に乗る人が守る、いちばん大事な五つのきまりを、自転車安全利用五則といいます。一つ目、車道が原則、左側を通行。歩道は例外、歩行者を優先。二つ目、交差点では信号と一時停止を守って、安全確認。三つ目、夜間はライトを点灯。四つ目、飲酒運転は禁止。五つ目、ヘルメットを着用。この五つは、これからのスライドでくわしく説明します。まずは五つの言葉をしっかり覚えましょう。",
+  nMy:"စက်ဘီးစီးသူ လိုက်နာရမည့် အရေးအကြီးဆုံး စည်းကမ်း 5 ချက်ကို စက်ဘီး ဘေးကင်းစွာ အသုံးပြုရန် စည်းကမ်း 5 ချက်ဟု ခေါ်ပါသည်။ ပထမ၊ ကားလမ်းပေါ်တွင် စီးခြင်းသည် မူလစည်းကမ်း ဖြစ်ပြီး ဘယ်ဘက်မှ သွားရပါမည်။ လူသွားလမ်းသည် ခြွင်းချက်ဖြစ်ပြီး လမ်းလျှောက်သူကို ဦးစားပေးရပါမည်။ ဒုတိယ၊ လမ်းဆုံတွင် မီးပွိုင့်နှင့် ခဏရပ်တန့်ခြင်းကို လိုက်နာပြီး ဘေးကင်းကြောင်း စစ်ဆေးပါ။ တတိယ၊ ညအချိန်တွင် မီးဖွင့်ပါ။ စတုတ္ထ၊ အရက်သောက်၍ စီးခြင်းကို တားမြစ်ထားပါသည်။ ပဉ္စမ၊ ဦးထုပ်ဆောင်းပါ။ ဤ 5 ချက်ကို နောက်ဆလိုက်များတွင် အသေးစိတ် ရှင်းပြပါမည်။ ဦးစွာ ဤ 5 ချက်ကို ကောင်းကောင်း မှတ်ထားပါ။"
+ },
+ b_vehicle: {
+  tJa:"自転車は「車両」の仲間",
+  tMy:"စက်ဘီးသည် ယာဉ်အမျိုးအစားထဲတွင် ပါဝင်သည်",
+  pts:[
+   ["自転車は法律で「軽車両」＝車両の仲間","ဥပဒေအရ စက်ဘီးသည် ယာဉ်ပေါ့ ဖြစ်ပြီး ယာဉ်အမျိုးအစားထဲတွင် ပါဝင်သည်"],
+   ["違反すると罰則がある","စည်းကမ်းချိုးဖောက်လျှင် ပြစ်ဒဏ် ရှိသည်"],
+   ["事故では刑事の責任と、損害賠償の責任","မတော်တဆမှုတွင် ရာဇဝတ်တာဝန်နှင့် လျော်ကြေးပေးရသည့် တာဝန် ရှိသည်"],
+   ["自転車の事故の約8割は自動車が相手","စက်ဘီး မတော်တဆမှု၏ 80 ရာခိုင်နှုန်းခန့်သည် ကားနှင့် ဖြစ်သည်"],
+   ["死亡・重傷事故の約4分の3は自転車にも違反","သေဆုံး၊ ပြင်းထန်ဒဏ်ရာ မတော်တဆမှု၏ 4 ပုံ 3 ပုံခန့်တွင် စက်ဘီးဘက်မှလည်း ချိုးဖောက်မှု ရှိသည်"]
+  ],
+  nJa:"日本の法律では、自転車は軽車両といって、車両の仲間です。歩く人と同じではありません。ですから、車と同じように交通ルールを守る必要があります。違反すると罰則があります。事故を起こして人にけがをさせると、刑事の責任を問われることがあり、相手にお金で損害を賠償する責任もあります。自転車の事故の約8割は、自動車が相手です。また、自転車に乗っていて亡くなったり大けがをした事故の約4分の3では、自転車の側にも違反がありました。",
+  nMy:"ဂျပန်ဥပဒေတွင် စက်ဘီးကို ယာဉ်ပေါ့ဟု ခေါ်ပြီး ယာဉ်အမျိုးအစားထဲတွင် ပါဝင်ပါသည်။ လမ်းလျှောက်သူနှင့် မတူပါ။ ထို့ကြောင့် ကားကဲ့သို့ပင် ယာဉ်စည်းကမ်းများကို လိုက်နာရန် လိုအပ်ပါသည်။ စည်းကမ်းချိုးဖောက်လျှင် ပြစ်ဒဏ် ရှိပါသည်။ မတော်တဆမှု ဖြစ်၍ တစ်စုံတစ်ယောက်ကို ဒဏ်ရာရစေလျှင် ရာဇဝတ်တာဝန် ခံရနိုင်ပြီး တစ်ဖက်လူကို ငွေဖြင့် လျော်ကြေးပေးရသည့် တာဝန်လည်း ရှိပါသည်။ စက်ဘီး မတော်တဆမှု၏ 80 ရာခိုင်နှုန်းခန့်သည် ကားနှင့် ဖြစ်ပါသည်။ ထို့အပြင် စက်ဘီးစီးနေစဉ် သေဆုံးခြင်း သို့မဟုတ် ပြင်းထန်စွာ ဒဏ်ရာရခြင်း မတော်တဆမှု၏ 4 ပုံ 3 ပုံခန့်တွင် စက်ဘီးဘက်မှလည်း စည်းကမ်းချိုးဖောက်မှု ရှိခဲ့ပါသည်။"
+ },
+ b_left: {
+  tJa:"車道の左側を通る",
+  tMy:"ကားလမ်း၏ ဘယ်ဘက်မှ သွားပါ",
+  pts:[
+   ["自転車は車道を通るのが原則","စက်ဘီးသည် ကားလမ်းပေါ်တွင် စီးခြင်းသည် မူလစည်းကမ်း"],
+   ["車道では道路の左端に寄って走る","ကားလမ်းပေါ်တွင် လမ်း၏ ဘယ်ဘက်အစွန်သို့ ကပ်၍ စီးပါ"],
+   ["右側を走る逆走は禁止（反則金6千円）","ညာဘက်မှ ပြောင်းပြန် စီးခြင်းကို တားမြစ်သည် (ဒဏ်ကြေး 6,000 ယန်း)"],
+   ["逆走は前から来る車と正面衝突しやすい","ပြောင်းပြန် စီးလျှင် ရှေ့မှလာသော ကားနှင့် တည့်တည့် တိုက်မိလွယ်သည်"],
+   ["車道を通らない違反も6千円","ကားလမ်းပေါ်တွင် မသွားသည့် ချိုးဖောက်မှုလည်း 6,000 ယန်း"]
+  ],
+  nJa:"自転車は、車道を通るのが原則です。そして、車道では道路の左端に寄って走ります。道路の右側を走る逆走は禁止で、反則金は6千円です。逆走はとても危険です。前から来る車や自転車と向かい合うので、正面からぶつかりやすく、車の運転手も自転車に気づくのが遅れます。ミャンマーの習慣で右側に寄らないよう、気をつけてください。車道を通らなければならない所で通らないのも違反で、6千円です。",
+  nMy:"စက်ဘီးသည် ကားလမ်းပေါ်တွင် စီးခြင်းသည် မူလစည်းကမ်း ဖြစ်ပါသည်။ ကားလမ်းပေါ်တွင် လမ်း၏ ဘယ်ဘက်အစွန်သို့ ကပ်၍ စီးရပါမည်။ လမ်း၏ ညာဘက်မှ ပြောင်းပြန် စီးခြင်းကို တားမြစ်ထားပြီး ဒဏ်ကြေးမှာ 6,000 ယန်း ဖြစ်ပါသည်။ ပြောင်းပြန် စီးခြင်းသည် အလွန် အန္တရာယ်များပါသည်။ ရှေ့မှလာသော ကားနှင့် စက်ဘီးများနှင့် မျက်နှာချင်းဆိုင် ဖြစ်သောကြောင့် တည့်တည့် တိုက်မိလွယ်ပြီး ကားမောင်းသူကလည်း စက်ဘီးကို နောက်ကျမှ သတိထားမိပါသည်။ မြန်မာ အလေ့အထဖြင့် ညာဘက်သို့ မကပ်မိစေရန် သတိထားပါ။ ကားလမ်းပေါ်တွင် သွားရမည့်နေရာတွင် မသွားခြင်းလည်း ချိုးဖောက်မှု ဖြစ်ပြီး 6,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_lane: {
+  tJa:"自転車道・自転車レーン・矢羽根",
+  tMy:"စက်ဘီးလမ်း၊ စက်ဘီးလမ်းကြောနှင့် မြှားပုံ အမှတ်အသား",
+  pts:[
+   ["自転車道があれば、そこを通る（違反3千円）","စက်ဘီးလမ်း ရှိလျှင် ထိုလမ်းမှ သွားရမည် (ချိုးဖောက်လျှင် 3,000 ယန်း)"],
+   ["青い自転車レーンがあれば、そこを通る（5千円）","အပြာရောင် စက်ဘီးလမ်းကြော ရှိလျှင် ထိုလမ်းကြောမှ သွားရမည် (5,000 ယန်း)"],
+   ["矢羽根マークは走る位置の目安","မြှားပုံ အမှတ်အသားသည် စီးရမည့် နေရာကို ပြသော လမ်းညွှန်"],
+   ["矢羽根は通行の義務ではない。車への注意の印","မြှားပုံ အမှတ်အသားသည် မဖြစ်မနေ သွားရမည့် လမ်း မဟုတ်။ ကားများကို သတိပေးသော အမှတ်အသား"],
+   ["矢羽根の向きは進む方向。逆向きに走らない","မြှား၏ ဦးတည်ရာသည် သွားရမည့် ဘက်။ ပြောင်းပြန် မစီးပါနှင့်"]
+  ],
+  nJa:"自転車のための通り道には、いくつかの種類があります。縁石や柵で分けられた自転車道があるときは、そこを通らなければなりません。違反すると3千円です。車道に青い色などで示された自転車レーンがあるときも、そこを通ります。違反すると5千円です。矢羽根の形のマークは、自転車が走る位置の目安で、車に自転車がいることを知らせるための印です。通行の義務ではありませんが、矢印の向きに合わせて左側を走りましょう。",
+  nMy:"စက်ဘီးအတွက် လမ်းများတွင် အမျိုးအစား အချို့ ရှိပါသည်။ ပလက်ဖောင်းအစွန်း သို့မဟုတ် အကာအရံဖြင့် ခွဲထားသော စက်ဘီးလမ်း ရှိလျှင် ထိုလမ်းမှ သွားရပါမည်။ ချိုးဖောက်လျှင် 3,000 ယန်း ဖြစ်ပါသည်။ ကားလမ်းပေါ်တွင် အပြာရောင် စသည်ဖြင့် ပြထားသော စက်ဘီးလမ်းကြော ရှိလျှင်လည်း ထိုလမ်းကြောမှ သွားရပါမည်။ ချိုးဖောက်လျှင် 5,000 ယန်း ဖြစ်ပါသည်။ မြှားပုံ အမှတ်အသားသည် စက်ဘီး စီးရမည့် နေရာကို ပြသော လမ်းညွှန် ဖြစ်ပြီး စက်ဘီး ရှိကြောင်း ကားများကို သတိပေးသော အမှတ်အသား ဖြစ်ပါသည်။ မဖြစ်မနေ သွားရမည့် လမ်း မဟုတ်သော်လည်း မြှား၏ ဦးတည်ရာအတိုင်း ဘယ်ဘက်မှ စီးပါ။"
+ },
+ b_roadside: {
+  tJa:"路側帯を通るとき",
+  tMy:"လမ်းဘေးဇုန်မှ သွားသောအခါ",
+  pts:[
+   ["路側帯は、歩道のない道路の端の白線の外側","လမ်းဘေးဇုန်သည် လူသွားလမ်း မရှိသော လမ်း၏ အစွန်ရှိ အဖြူမျဉ်း အပြင်ဘက်"],
+   ["通れるのは道路の左側の路側帯だけ","လမ်း၏ ဘယ်ဘက်ရှိ လမ်းဘေးဇုန်မှသာ သွားနိုင်သည်"],
+   ["右側の路側帯を通ると逆走と同じ（6千円）","ညာဘက် လမ်းဘေးဇုန်မှ သွားလျှင် ပြောင်းပြန် စီးခြင်းနှင့် တူသည် (6,000 ယန်း)"],
+   ["白の二本線は歩行者用。通れない（6千円）","အဖြူမျဉ်း နှစ်ကြောင်းသည် လမ်းလျှောက်သူအတွက်။ မသွားရ (6,000 ယန်း)"],
+   ["歩行者のじゃまにならない速さで（3千円）","လမ်းလျှောက်သူကို အနှောင့်အယှက် မဖြစ်စေသော အမြန်နှုန်းဖြင့် (3,000 ယန်း)"]
+  ],
+  nJa:"歩道のない道路では、端に白い線が引かれていることがあります。その線の外側を路側帯といいます。自転車は路側帯を通ることができますが、通れるのは道路の左側の路側帯だけです。右側の路側帯を通ると、逆走と同じ違反で6千円です。また、白い線が二本並んでいる路側帯は歩行者専用なので、自転車は通れません。これも6千円です。路側帯を通るときは、歩行者のじゃまにならない速さと方法で走ります。違反は3千円です。",
+  nMy:"လူသွားလမ်း မရှိသော လမ်းများတွင် အစွန်၌ အဖြူမျဉ်း ဆွဲထားလေ့ ရှိပါသည်။ ထိုမျဉ်း၏ အပြင်ဘက်ကို လမ်းဘေးဇုန်ဟု ခေါ်ပါသည်။ စက်ဘီးသည် လမ်းဘေးဇုန်မှ သွားနိုင်သော်လည်း လမ်း၏ ဘယ်ဘက်ရှိ လမ်းဘေးဇုန်မှသာ သွားနိုင်ပါသည်။ ညာဘက် လမ်းဘေးဇုန်မှ သွားလျှင် ပြောင်းပြန် စီးခြင်းနှင့် တူသော ချိုးဖောက်မှု ဖြစ်ပြီး 6,000 ယန်း ဖြစ်ပါသည်။ ထို့အပြင် အဖြူမျဉ်း နှစ်ကြောင်း ယှဉ်ထားသော လမ်းဘေးဇုန်သည် လမ်းလျှောက်သူ သီးသန့် ဖြစ်သောကြောင့် စက်ဘီး မသွားရပါ။ ၎င်းလည်း 6,000 ယန်း ဖြစ်ပါသည်။ လမ်းဘေးဇုန်မှ သွားသောအခါ လမ်းလျှောက်သူကို အနှောင့်အယှက် မဖြစ်စေသော အမြန်နှုန်းနှင့် နည်းလမ်းဖြင့် စီးရပါမည်။ ချိုးဖောက်လျှင် 3,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_sidewalk1: {
+  tJa:"歩道を通れるとき",
+  tMy:"လူသွားလမ်းမှ သွားနိုင်သောအခါ",
+  pts:[
+   ["「普通自転車歩道通行可」の標識・標示があるとき","စက်ဘီး လူသွားလမ်းမှ သွားနိုင်ကြောင်း ဆိုင်းဘုတ် သို့မဟုတ် လမ်းမျက်နှာပြင် အမှတ်အသား ရှိသောအခါ"],
+   ["13歳未満・70歳以上・一定の身体障害がある人","အသက် 13 နှစ်အောက်၊ အသက် 70 နှစ်နှင့်အထက်၊ ကိုယ်ခန္ဓာ မသန်စွမ်းသူ"],
+   ["やむを得ないとき（工事・駐車車両が続く等）","မလွှဲမရှောင်သာသောအခါ (လမ်းပြင်ဆင်ခြင်း၊ ရပ်ထားသော ကားများ ဆက်တိုက်ရှိခြင်း စသည်)"],
+   ["車道が狭く車がとても多いときも、やむを得ない","ကားလမ်း ကျဉ်းပြီး ကား အလွန်များသောအခါလည်း မလွှဲမရှောင်သာဟု ယူဆသည်"],
+   ["ただ通るだけなら普通は指導警告。危険な走りは取締り","ရိုးရိုးသွားရုံသာဆိုလျှင် များသောအားဖြင့် သတိပေးခံရရုံ။ အန္တရာယ်ရှိစွာ စီးလျှင် ဖမ်းဆီးခံရ"]
+  ],
+  nJa:"歩道は歩行者のための場所で、自転車が通れるのは例外のときだけです。一つ目は、普通自転車歩道通行可の標識や標示があるときです。絵のような青い丸の標識が目印です。二つ目は、13歳未満の子ども、70歳以上の人、体に一定の障害がある人です。三つ目は、工事をしている、駐車している車が続いている、車道が狭くて車がとても多いなど、やむを得ないときです。歩道をただ通っているだけなら、普通は指導警告ですが、スピードを出して歩行者を立ち止まらせるような走り方は取締りの対象です。",
+  nMy:"လူသွားလမ်းသည် လမ်းလျှောက်သူများအတွက် နေရာဖြစ်ပြီး စက်ဘီး သွားနိုင်သည်မှာ ခြွင်းချက်အခါများတွင်သာ ဖြစ်ပါသည်။ ပထမ၊ စက်ဘီး လူသွားလမ်းမှ သွားနိုင်ကြောင်း ယာဉ်စည်းကမ်းဆိုင်းဘုတ် သို့မဟုတ် လမ်းမျက်နှာပြင် အမှတ်အသား ရှိသောအခါ ဖြစ်ပါသည်။ ပုံထဲကဲ့သို့ အပြာရောင် အဝိုင်း ဆိုင်းဘုတ်သည် အမှတ်အသား ဖြစ်ပါသည်။ ဒုတိယ၊ အသက် 13 နှစ်အောက် ကလေး၊ အသက် 70 နှစ်နှင့်အထက် လူကြီးနှင့် ကိုယ်ခန္ဓာ မသန်စွမ်းမှု ရှိသူ ဖြစ်ပါသည်။ တတိယ၊ လမ်းပြင်ဆင်နေခြင်း၊ ရပ်ထားသော ကားများ ဆက်တိုက် ရှိနေခြင်း၊ ကားလမ်း ကျဉ်းပြီး ကား အလွန်များခြင်း စသည့် မလွှဲမရှောင်သာသော အခါ ဖြစ်ပါသည်။ လူသွားလမ်းမှ ရိုးရိုးသွားရုံသာဆိုလျှင် များသောအားဖြင့် သတိပေးခံရရုံ ဖြစ်သော်လည်း အမြန်စီး၍ လမ်းလျှောက်သူကို ရပ်တန့်ရစေသည့် စီးပုံမျိုးသည် ဖမ်းဆီးအရေးယူခံရနိုင်ပါသည်။"
+ },
+ b_sidewalk2: {
+  tJa:"歩道の通り方",
+  tMy:"လူသွားလမ်းပေါ်တွင် စီးနည်း",
+  pts:[
+   ["歩道の中央から車道寄りを徐行する","လူသွားလမ်း၏ အလယ်မှ ကားလမ်းဘက်ခြမ်းတွင် ဖြည်းဖြည်းမောင်းပါ"],
+   ["歩行者のじゃまになるときは一時停止（3千円）","လမ်းလျှောက်သူကို အနှောင့်အယှက်ဖြစ်မည်ဆိုလျှင် ခဏရပ်တန့်ပါ (3,000 ယန်း)"],
+   ["自転車の通る部分の指定があれば、そこを徐行","စက်ဘီးသွားရန် သတ်မှတ်ထားသော အပိုင်း ရှိလျှင် ထိုနေရာတွင် ဖြည်းဖြည်းမောင်းပါ"],
+   ["ベルで歩行者をどかしてはいけない","ခေါင်းလောင်းတီး၍ လမ်းလျှောက်သူကို ဖယ်ခိုင်းခြင်း မပြုရ"],
+   ["歩行者の死亡・重傷事故は歩道上が最多","လမ်းလျှောက်သူ သေဆုံး၊ ပြင်းထန်ဒဏ်ရာ မတော်တဆမှုသည် လူသွားလမ်းပေါ်တွင် အများဆုံး"]
+  ],
+  nJa:"歩道を通るときは、歩行者が優先です。歩道の真ん中から車道に近い側を、すぐに止まれる速さで、ゆっくり進みます。これを徐行といいます。歩行者のじゃまになりそうなときは、一時停止します。違反は3千円です。自転車の通る部分が示されているときは、そこを徐行します。歩行者に道をあけてもらうために、ベルを鳴らしてはいけません。自転車と歩行者の事故で歩行者が亡くなったり大けがをした場所は、歩道の上が約4割と、いちばん多いのです。",
+  nMy:"လူသွားလမ်းမှ သွားသောအခါ လမ်းလျှောက်သူကို ဦးစားပေးရပါမည်။ လူသွားလမ်း၏ အလယ်မှ ကားလမ်းနှင့် နီးသော ဘက်ခြမ်းတွင် ချက်ချင်း ရပ်နိုင်သော အမြန်နှုန်းဖြင့် ဖြည်းဖြည်း သွားရပါမည်။ ၎င်းကို ဖြည်းဖြည်းမောင်းခြင်းဟု ခေါ်ပါသည်။ လမ်းလျှောက်သူကို အနှောင့်အယှက် ဖြစ်မည်ဆိုလျှင် ခဏရပ်တန့်ရပါမည်။ ချိုးဖောက်လျှင် 3,000 ယန်း ဖြစ်ပါသည်။ စက်ဘီးသွားရန် အပိုင်းကို ပြထားလျှင် ထိုနေရာတွင် ဖြည်းဖြည်းမောင်းပါ။ လမ်းဖယ်ပေးစေရန် လမ်းလျှောက်သူကို ခေါင်းလောင်း မတီးရပါ။ စက်ဘီးနှင့် လမ်းလျှောက်သူ မတော်တဆမှုတွင် လမ်းလျှောက်သူ သေဆုံးခြင်း သို့မဟုတ် ပြင်းထန်စွာ ဒဏ်ရာရခြင်း ဖြစ်သည့် နေရာမှာ လူသွားလမ်းပေါ်တွင် 40 ရာခိုင်နှုန်းကျော်ဖြင့် အများဆုံး ဖြစ်ပါသည်။"
+ },
+ b_signal: {
+  tJa:"信号の見方",
+  tMy:"မီးပွိုင့် ကြည့်နည်း",
+  pts:[
+   ["車道を進むときは車両用の信号に従う","ကားလမ်းပေါ်မှ သွားသောအခါ ယာဉ်မီးပွိုင့်ကို လိုက်နာပါ"],
+   ["横断歩道を進むときは歩行者用の信号に従う","လူကူးမျဉ်းကြားမှ သွားသောအခါ လမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာပါ"],
+   ["「歩行者・自転車専用」の表示があれば歩行者用","လမ်းလျှောက်သူနှင့် စက်ဘီးသီးသန့်ဟု ပြထားလျှင် လမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာ"],
+   ["止まる位置は停止線の直前。なければ交差点の手前","ရပ်ရမည့်နေရာသည် ရပ်တန့်မျဉ်း၏ ရှေ့။ မရှိလျှင် လမ်းဆုံ၏ ရှေ့"],
+   ["信号無視は6千円（点滅信号の無視は5千円）","မီးပွိုင့် ချိုးဖောက်ခြင်း 6,000 ယန်း (မီးမှိတ်တုတ်ကို ချိုးဖောက်လျှင် 5,000 ယန်း)"]
+  ],
+  nJa:"自転車は、車道を進むときは車両用の信号に従います。横断歩道を進むときは、歩行者用の信号に従います。ただし、歩行者用の信号に、歩行者、自転車専用という表示があるときは、車道を進んでいても、その歩行者用の信号に従います。赤で止まるときは、停止線の直前で止まります。停止線がないときは交差点の手前、交差点のすぐ近くに横断歩道があるときは、その手前で止まります。信号無視は6千円、点滅信号の無視は5千円です。",
+  nMy:"စက်ဘီးသည် ကားလမ်းပေါ်မှ သွားသောအခါ ယာဉ်မီးပွိုင့်ကို လိုက်နာရပါမည်။ လူကူးမျဉ်းကြားမှ သွားသောအခါ လမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာရပါမည်။ သို့သော် လမ်းလျှောက်သူ မီးပွိုင့်တွင် လမ်းလျှောက်သူနှင့် စက်ဘီးသီးသန့်ဟု ပြထားလျှင် ကားလမ်းပေါ်မှ သွားနေသော်လည်း ထိုလမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာရပါမည်။ မီးနီတွင် ရပ်သောအခါ ရပ်တန့်မျဉ်း၏ ရှေ့တွင် ရပ်ပါ။ ရပ်တန့်မျဉ်း မရှိလျှင် လမ်းဆုံ၏ ရှေ့တွင်၊ လမ်းဆုံ အနီးတွင် လူကူးမျဉ်းကြား ရှိလျှင် ထိုလူကူးမျဉ်းကြား၏ ရှေ့တွင် ရပ်ပါ။ မီးပွိုင့် ချိုးဖောက်လျှင် 6,000 ယန်း၊ မီးမှိတ်တုတ်ကို ချိုးဖောက်လျှင် 5,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_stop: {
+  tJa:"一時停止と見通しの悪い交差点",
+  tMy:"ခဏရပ်တန့်ခြင်းနှင့် မြင်ကွင်းမကောင်းသော လမ်းဆုံ",
+  pts:[
+   ["「止まれ」の標識では停止線の直前で必ず止まる","ရပ်ဆိုင်းဘုတ် ရှိလျှင် ရပ်တန့်မျဉ်း၏ ရှေ့တွင် မဖြစ်မနေ ရပ်ပါ"],
+   ["一時停止をしないと5千円","ခဏရပ်တန့်ခြင်း မပြုလျှင် 5,000 ယန်း"],
+   ["見通しの悪い交差点・曲がり角は徐行（5千円）","မြင်ကွင်းမကောင်းသော လမ်းဆုံ၊ လမ်းကွေ့တွင် ဖြည်းဖြည်းမောင်းပါ (5,000 ယန်း)"],
+   ["信号のない交差点は左から来る車両が優先","မီးပွိုင့်မရှိသော လမ်းဆုံတွင် ဘယ်ဘက်မှလာသော ယာဉ်ကို ဦးစားပေး"],
+   ["検挙の8割以上は信号無視と一時不停止","ဖမ်းဆီးခံရမှု၏ 80 ရာခိုင်နှုန်းကျော်သည် မီးပွိုင့်ချိုးဖောက်ခြင်းနှင့် ခဏမရပ်ခြင်း"]
+  ],
+  nJa:"止まれの標識があるところでは、停止線の直前で必ず一度止まり、左右の安全を確かめます。停止線がなければ、交差点の手前で止まります。止まらないと5千円です。見通しの悪い交差点や曲がり角では、すぐ止まれる速さに落として徐行します。これも5千円です。信号のない交差点では、左から来る車両が優先です。優先道路や明らかに広い道路を通る車のじゃまをしてはいけません。自転車が検挙された違反の8割以上は、信号無視と一時停止をしなかったことです。",
+  nMy:"ရပ်ဆိုင်းဘုတ် ရှိသော နေရာတွင် ရပ်တန့်မျဉ်း၏ ရှေ့တွင် မဖြစ်မနေ တစ်ကြိမ် ရပ်ပြီး ဘယ်ညာ ဘေးကင်းကြောင်း စစ်ဆေးပါ။ ရပ်တန့်မျဉ်း မရှိလျှင် လမ်းဆုံ၏ ရှေ့တွင် ရပ်ပါ။ မရပ်လျှင် 5,000 ယန်း ဖြစ်ပါသည်။ မြင်ကွင်းမကောင်းသော လမ်းဆုံနှင့် လမ်းကွေ့တွင် ချက်ချင်း ရပ်နိုင်သော အမြန်နှုန်းအထိ လျှော့၍ ဖြည်းဖြည်းမောင်းပါ။ ၎င်းလည်း 5,000 ယန်း ဖြစ်ပါသည်။ မီးပွိုင့်မရှိသော လမ်းဆုံတွင် ဘယ်ဘက်မှလာသော ယာဉ်ကို ဦးစားပေးရပါမည်။ ဦးစားပေးလမ်း သို့မဟုတ် သိသိသာသာ ကျယ်သော လမ်းမှလာသော ယာဉ်ကို အနှောင့်အယှက် မပေးရပါ။ စက်ဘီး ဖမ်းဆီးခံရသော ချိုးဖောက်မှု၏ 80 ရာခိုင်နှုန်းကျော်သည် မီးပွိုင့်ချိုးဖောက်ခြင်းနှင့် ခဏရပ်တန့်ခြင်း မပြုခြင်း ဖြစ်ပါသည်။"
+ },
+ b_cross: {
+  tJa:"交差点の直進・左折",
+  tMy:"လမ်းဆုံတွင် တည့်တည့်သွားခြင်းနှင့် ဘယ်ကွေ့ခြင်း",
+  pts:[
+   ["直進は信号に従い、道路の左端をまっすぐ進む","တည့်တည့်သွားလျှင် မီးပွိုင့်ကို လိုက်နာပြီး လမ်း၏ ဘယ်ဘက်အစွန်မှ တည့်တည့် သွားပါ"],
+   ["左折は前もって左端に寄り、左端に沿って徐行","ဘယ်ကွေ့လျှင် ကြိုတင်၍ ဘယ်ဘက်အစွန်သို့ ကပ်ပြီး အစွန်အတိုင်း ဖြည်းဖြည်းမောင်းပါ"],
+   ["左に曲がる車の巻き込みに注意","ဘယ်ကွေ့သော ကားကြားထဲ ညှပ်ပါသွားခြင်းကို သတိထားပါ"],
+   ["自転車横断帯があれば、そこを通る","စက်ဘီးဖြတ်ကူးမျဉ်းကြား ရှိလျှင် ထိုနေရာမှ သွားပါ"],
+   ["曲がる先の横断歩道の歩行者にも注意","ကွေ့မည့်ဘက်ရှိ လူကူးမျဉ်းကြားပေါ်က လမ်းလျှောက်သူကိုလည်း သတိထားပါ"]
+  ],
+  nJa:"交差点をまっすぐ進むときは、信号に従って、道路の左端をまっすぐ進みます。左に曲がるときは、交差点の手前から、できるだけ道路の左端に寄っておき、左端に沿ってゆっくり徐行して曲がります。このとき、同じように左に曲がる車に巻き込まれないよう、後ろや横の車に注意してください。曲がった先の横断歩道を渡る歩行者にも気をつけます。交差点やその近くに自転車横断帯があるときは、そこを通らなければなりません。",
+  nMy:"လမ်းဆုံကို တည့်တည့် ဖြတ်သွားသောအခါ မီးပွိုင့်ကို လိုက်နာပြီး လမ်း၏ ဘယ်ဘက်အစွန်မှ တည့်တည့် သွားပါ။ ဘယ်ကွေ့သောအခါ လမ်းဆုံ မရောက်မီကပင် လမ်း၏ ဘယ်ဘက်အစွန်သို့ တတ်နိုင်သမျှ ကပ်ထားပြီး အစွန်အတိုင်း ဖြည်းဖြည်းမောင်း၍ ကွေ့ပါ။ ထိုအခါ ဘယ်ကွေ့မည့် ကားကြားထဲ ညှပ်ပါမသွားစေရန် နောက်နှင့် ဘေးရှိ ကားများကို သတိထားပါ။ ကွေ့ပြီးနောက် လူကူးမျဉ်းကြားကို ဖြတ်ကူးနေသော လမ်းလျှောက်သူကိုလည်း သတိထားပါ။ လမ်းဆုံ သို့မဟုတ် ၎င်း၏ အနီးတွင် စက်ဘီးဖြတ်ကူးမျဉ်းကြား ရှိလျှင် ထိုနေရာမှ သွားရပါမည်။"
+ },
+ b_right: {
+  tJa:"右折は二段階右折",
+  tMy:"ညာကွေ့လျှင် အဆင့်နှစ်ဆင့်ဖြင့် ညာကွေ့ပါ",
+  pts:[
+   ["①左端に寄り、青で向こう側までまっすぐ進む","① ဘယ်ဘက်အစွန်သို့ ကပ်ပြီး မီးစိမ်းတွင် တစ်ဖက်ခြမ်းအထိ တည့်တည့် သွားပါ"],
+   ["②そこで止まり、右に向きを変えて待つ","② ထိုနေရာတွင် ရပ်ပြီး ညာဘက်သို့ လှည့်၍ စောင့်ပါ"],
+   ["③前の信号が青になってから進む","③ ရှေ့ရှိ မီးပွိုင့် စိမ်းမှ သွားပါ"],
+   ["車の右折の青矢印では自転車は進めない","ကားအတွက် ညာကွေ့ မြှားစိမ်းဖြင့် စက်ဘီး မသွားရ"],
+   ["違反3千円。信号交差点では信号無視6千円","ချိုးဖောက်လျှင် 3,000 ယန်း။ မီးပွိုင့်ရှိသော လမ်းဆုံတွင် မီးပွိုင့်ချိုးဖောက်မှု 6,000 ယန်း"]
+  ],
+  nJa:"自転車は、車のように交差点の中で右に曲がることはできません。二段階右折をします。まず、手前から道路の左端に寄り、信号が青になったら、交差点の左の端に沿って、向こう側までまっすぐ進みます。次に、そこで止まって、右に向きを変えて待ちます。そして、前の信号が青になってから進みます。車用の右折の青い矢印が出ても、自転車は進めません。二段階右折をしないと3千円、信号のある交差点でしないと信号無視で6千円です。",
+  nMy:"စက်ဘီးသည် ကားကဲ့သို့ လမ်းဆုံအလယ်တွင် ညာကွေ့ခွင့် မရှိပါ။ အဆင့်နှစ်ဆင့်ဖြင့် ညာကွေ့ရပါမည်။ ပထမ၊ ကြိုတင်၍ လမ်း၏ ဘယ်ဘက်အစွန်သို့ ကပ်ပြီး မီးစိမ်းဖြစ်လျှင် လမ်းဆုံ၏ ဘယ်ဘက်အစွန်အတိုင်း တစ်ဖက်ခြမ်းအထိ တည့်တည့် သွားပါ။ ဒုတိယ၊ ထိုနေရာတွင် ရပ်ပြီး ညာဘက်သို့ လှည့်၍ စောင့်ပါ။ တတိယ၊ ရှေ့ရှိ မီးပွိုင့် စိမ်းမှ သွားပါ။ ကားအတွက် ညာကွေ့ မြှားစိမ်း ပြနေသော်လည်း စက်ဘီး မသွားရပါ။ အဆင့်နှစ်ဆင့်ဖြင့် ညာမကွေ့လျှင် 3,000 ယန်း၊ မီးပွိုင့်ရှိသော လမ်းဆုံတွင် မလုပ်လျှင် မီးပွိုင့်ချိုးဖောက်မှုဖြင့် 6,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_crosswalk: {
+  tJa:"横断歩道を渡るとき",
+  tMy:"လူကူးမျဉ်းကြားကို ဖြတ်ကူးသောအခါ",
+  pts:[
+   ["横断歩道は自転車に乗ったまま渡れる","လူကူးမျဉ်းကြားကို စက်ဘီးစီးလျက် ဖြတ်ကူးနိုင်သည်"],
+   ["歩行者のじゃまになりそうなら、降りて押す","လမ်းလျှောက်သူကို အနှောင့်အယှက်ဖြစ်မည်ဆိုလျှင် ဆင်း၍ တွန်းပါ"],
+   ["渡るときは歩行者用の信号に従う","ဖြတ်ကူးသောအခါ လမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာပါ"],
+   ["車道で横断歩道に歩行者がいたら一時停止して譲る","ကားလမ်းပေါ်တွင် လူကူးမျဉ်းကြား၌ လမ်းလျှောက်သူ ရှိလျှင် ခဏရပ်တန့်ပြီး လမ်းဖယ်ပေးပါ"],
+   ["歩行者を妨げると6千円","လမ်းလျှောက်သူကို အနှောင့်အယှက်ပေးလျှင် 6,000 ယန်း"]
+  ],
+  nJa:"横断歩道は、自転車に乗ったまま渡ることができます。でも、横断歩道を渡っている歩行者のじゃまになりそうなときは、乗ったまま渡ってはいけません。自転車を降りて、押して歩いて渡ります。横断歩道を渡るときは、歩行者用の信号に従います。また、自転車で車道を走っていて、横断歩道を渡ろうとしている人や渡っている人がいるときは、横断歩道の手前で一時停止して、先に渡ってもらいます。歩行者のじゃまをすると6千円です。",
+  nMy:"လူကူးမျဉ်းကြားကို စက်ဘီးစီးလျက် ဖြတ်ကူးနိုင်ပါသည်။ သို့သော် လူကူးမျဉ်းကြားကို ဖြတ်ကူးနေသော လမ်းလျှောက်သူကို အနှောင့်အယှက် ဖြစ်မည်ဆိုလျှင် စီးလျက် မဖြတ်ရပါ။ စက်ဘီးမှ ဆင်း၍ တွန်းပြီး လမ်းလျှောက်၍ ဖြတ်ကူးပါ။ လူကူးမျဉ်းကြားကို ဖြတ်ကူးသောအခါ လမ်းလျှောက်သူ မီးပွိုင့်ကို လိုက်နာပါ။ ထို့အပြင် စက်ဘီးဖြင့် ကားလမ်းပေါ်တွင် စီးနေစဉ် လူကူးမျဉ်းကြားကို ဖြတ်ကူးမည့်သူ သို့မဟုတ် ဖြတ်ကူးနေသူ ရှိလျှင် လူကူးမျဉ်းကြား၏ ရှေ့တွင် ခဏရပ်တန့်ပြီး ထိုသူကို အရင် ဖြတ်ကူးခွင့်ပေးပါ။ လမ်းလျှောက်သူကို အနှောင့်အယှက်ပေးလျှင် 6,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_rail: {
+  tJa:"踏切",
+  tMy:"ရထားလမ်းကူး",
+  pts:[
+   ["踏切の直前で必ず止まり、左右の安全を確かめる","ရထားလမ်းကူး၏ ရှေ့တွင် မဖြစ်မနေ ရပ်ပြီး ဘယ်ညာ ဘေးကင်းကြောင်း စစ်ဆေးပါ"],
+   ["止まらないと6千円","မရပ်လျှင် 6,000 ယန်း"],
+   ["遮断機が下りかけ・警報機が鳴っていたら入らない","ဂိတ်တံ ကျလာနေလျှင် သို့မဟုတ် သတိပေးခေါင်းလောင်း မြည်နေလျှင် မဝင်ပါနှင့်"],
+   ["それでも入ると7千円","ထိုသို့ ဝင်လျှင် 7,000 ယန်း"],
+   ["降りて押して渡るのが安全","စက်ဘီးမှ ဆင်း၍ တွန်းပြီး ဖြတ်ကူးခြင်းသည် ဘေးကင်းသည်"]
+  ],
+  nJa:"踏切では、すぐ手前で必ず止まり、左右を見て、電車が来ないか安全を確かめてから渡ります。止まらないと6千円です。遮断機が下りはじめているときや、警報機が鳴っているときは、絶対に踏切に入ってはいけません。入ると7千円です。教則では、自転車を降りて押して渡るようにすすめています。急がず、安全に渡りましょう。",
+  nMy:"ရထားလမ်းကူးတွင် ရှေ့နားတွင် မဖြစ်မနေ ရပ်ပြီး ဘယ်ညာကို ကြည့်ကာ ရထား မလာကြောင်း ဘေးကင်းမှု စစ်ဆေးပြီးမှ ဖြတ်ကူးပါ။ မရပ်လျှင် 6,000 ယန်း ဖြစ်ပါသည်။ ဂိတ်တံ ကျလာနေသောအခါ သို့မဟုတ် သတိပေးခေါင်းလောင်း မြည်နေသောအခါ ရထားလမ်းကူးထဲသို့ လုံးဝ မဝင်ရပါ။ ဝင်လျှင် 7,000 ယန်း ဖြစ်ပါသည်။ ယာဉ်စည်းကမ်း လမ်းညွှန်တွင် စက်ဘီးမှ ဆင်း၍ တွန်းပြီး ဖြတ်ကူးရန် အကြံပြုထားပါသည်။ မလောဘဲ ဘေးကင်းစွာ ဖြတ်ကူးပါ။"
+ },
+ b_hand: {
+  tJa:"合図（手信号）とベル",
+  tMy:"အချက်ပြခြင်း (လက်အချက်ပြ) နှင့် ခေါင်းလောင်း",
+  pts:[
+   ["左折：右腕のひじを垂直に上へ曲げる","ဘယ်ကွေ့ – ညာလက်၏ တံတောင်ကို အပေါ်သို့ ထောင်လိုက် ကွေးပါ"],
+   ["右折：右腕を横に水平に出す","ညာကွေ့ – ညာလက်ကို ဘေးသို့ ရေပြင်ညီ ဆန့်ထုတ်ပါ"],
+   ["停止：右腕を斜め下にのばす","ရပ်ခြင်း – ညာလက်ကို အောက်ဘက်သို့ စောင်း၍ ဆန့်ပါ"],
+   ["右左折は30m手前から。合図しないと5千円","ညာကွေ့၊ ဘယ်ကွေ့ကို 30 မီတာ ရှေ့မှ အချက်ပြပါ။ အချက်မပြလျှင် 5,000 ယန်း"],
+   ["ベルは危険を防ぐときだけ。むやみに鳴らすと3千円","ခေါင်းလောင်းကို အန္တရာယ် ကာကွယ်ရန်သာ တီးပါ။ အလကား တီးလျှင် 3,000 ယန်း"]
+  ],
+  nJa:"自転車も、曲がるときや止まるときは合図をする義務があります。左に曲がるときは、右腕のひじを垂直に上へ曲げます。右に曲がるときは、右腕を横にまっすぐ水平に出します。止まるときは、右腕を斜め下にのばします。右左折の合図は、交差点の30メートル手前から行います。合図をしないと5千円です。合図のとき以外は、片手で運転しないでください。ベルは、危険を防ぐためにどうしても必要なときだけ鳴らします。歩行者にどいてもらうために鳴らすのは違反で、3千円です。",
+  nMy:"စက်ဘီးလည်း ကွေ့သောအခါ သို့မဟုတ် ရပ်သောအခါ အချက်ပြရန် တာဝန် ရှိပါသည်။ ဘယ်ကွေ့သောအခါ ညာလက်၏ တံတောင်ကို အပေါ်သို့ ထောင်လိုက် ကွေးပါ။ ညာကွေ့သောအခါ ညာလက်ကို ဘေးသို့ ရေပြင်ညီ တည့်တည့် ဆန့်ထုတ်ပါ။ ရပ်သောအခါ ညာလက်ကို အောက်ဘက်သို့ စောင်း၍ ဆန့်ပါ။ ညာကွေ့၊ ဘယ်ကွေ့ အချက်ပြခြင်းကို လမ်းဆုံ၏ 30 မီတာ ရှေ့မှ စတင်ပါ။ အချက်မပြလျှင် 5,000 ယန်း ဖြစ်ပါသည်။ အချက်ပြချိန်မှလွဲ၍ လက်တစ်ဖက်တည်းဖြင့် မစီးပါနှင့်။ ခေါင်းလောင်းကို အန္တရာယ် ကာကွယ်ရန် မဖြစ်မနေ လိုအပ်သောအခါမှသာ တီးပါ။ လမ်းဖယ်ပေးစေရန် လမ်းလျှောက်သူကို တီးခြင်းသည် ချိုးဖောက်မှု ဖြစ်ပြီး 3,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_sumaho: {
+  tJa:"ながらスマホは禁止",
+  tMy:"ဖုန်းကိုင်ရင်း စီးခြင်းကို တားမြစ်သည်",
+  pts:[
+   ["スマホを手に持って通話・画面を見るのは禁止","စမတ်ဖုန်းကို လက်ဖြင့်ကိုင်၍ ဖုန်းပြောခြင်း၊ မျက်နှာပြင်ကို ကြည့်ခြင်းကို တားမြစ်သည်"],
+   ["止まっているときは違反にならない","ရပ်ထားချိန်တွင် ချိုးဖောက်မှု မဖြစ်ပါ"],
+   ["青切符の反則金は1万2千円（いちばん高い）","အပြာရောင်လက်မှတ်၏ ဒဏ်ကြေး 12,000 ယန်း (အမြင့်ဆုံး)"],
+   ["罰則：6月以下の拘禁刑または10万円以下の罰金","ပြစ်ဒဏ် – 6 လအထိ ထောင်ဒဏ် သို့မဟုတ် 100,000 ယန်းအထိ ငွေဒဏ်"],
+   ["危険を生じさせたら1年以下・30万円以下","အန္တရာယ် ဖြစ်စေလျှင် 1 နှစ်အထိ ထောင်ဒဏ်၊ 300,000 ယန်းအထိ ငွေဒဏ်"]
+  ],
+  nJa:"自転車に乗りながら、スマートフォンを手に持って電話をしたり、画面をじっと見たりすることは禁止です。止まっているときは違反になりません。使うときは、必ず安全な場所に止まってからにしましょう。2024年11月から罰則が重くなり、6か月以下の拘禁刑、または10万円以下の罰金です。事故など交通の危険を生じさせると、1年以下の拘禁刑、または30万円以下の罰金です。2026年4月からの青切符では、反則金は1万2千円で、いちばん高い金額です。",
+  nMy:"စက်ဘီးစီးရင်း စမတ်ဖုန်းကို လက်ဖြင့်ကိုင်၍ ဖုန်းပြောခြင်း သို့မဟုတ် မျက်နှာပြင်ကို စိုက်ကြည့်ခြင်းကို တားမြစ်ထားပါသည်။ ရပ်ထားချိန်တွင် ချိုးဖောက်မှု မဖြစ်ပါ။ အသုံးပြုလိုလျှင် ဘေးကင်းသော နေရာတွင် မဖြစ်မနေ ရပ်ပြီးမှ အသုံးပြုပါ။ 2024 ခုနှစ် နိုဝင်ဘာလမှစ၍ ပြစ်ဒဏ် ပိုမို ပြင်းထန်လာပြီး 6 လအထိ ထောင်ဒဏ် သို့မဟုတ် 100,000 ယန်းအထိ ငွေဒဏ် ဖြစ်ပါသည်။ မတော်တဆမှု စသည့် ယာဉ်အန္တရာယ် ဖြစ်စေလျှင် 1 နှစ်အထိ ထောင်ဒဏ် သို့မဟုတ် 300,000 ယန်းအထိ ငွေဒဏ် ဖြစ်ပါသည်။ 2026 ခုနှစ် ဧပြီလမှစ၍ အပြာရောင်လက်မှတ်တွင် ဒဏ်ကြေးမှာ 12,000 ယန်း ဖြစ်ပြီး အမြင့်ဆုံး ပမာဏ ဖြစ်ပါသည်။"
+ }
+});
+// 自転車ルール研修スライド 17〜31（b_alcohol〜b_end）の文と読み上げ原稿。根拠：facts_bike.md（2026-10-22確認）
+Object.assign(SLIDE_TEXT, {
+ b_alcohol: {
+  tJa:"お酒を飲んだら乗らない",
+  tMy:"အရက်သောက်ပြီးလျှင် စက်ဘီး မစီးပါနှင့်",
+  pts:[
+   ["お酒を飲んだら、量に関係なく自転車に乗らない","အရက်သောက်ပြီးလျှင် နည်းနည်းပဲ သောက်သည်ဖြစ်စေ စက်ဘီး မစီးရပါ။"],
+   ["酒気帯び運転：3年以下の拘禁刑または50万円以下の罰金","အရက်သောက်၍ စီးလျှင် ထောင်ဒဏ် 3 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 500,000 ယန်းအထိ ချမှတ်ခံရပါသည်။"],
+   ["酒酔い運転：5年以下の拘禁刑または100万円以下の罰金","အရက်မူးနေပြီး စီးလျှင် ထောင်ဒဏ် 5 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 1,000,000 ယန်းအထိ ချမှတ်ခံရပါသည်။"],
+   ["自転車を貸した人も同じ罰。酒を出した人・同乗者も罰","စက်ဘီးငှားပေးသူလည်း အပြစ်ဒဏ် အတူတူ ခံရပါသည်။ အရက်တိုက်သူနှင့် အတူစီးသူလည်း အပြစ်ဒဏ် ခံရပါသည်။"],
+   ["飲酒ありは死亡・重傷事故の割合が約1.9倍","အရက်သောက်ထားလျှင် သေဆုံးခြင်း၊ ပြင်းထန်စွာ ဒဏ်ရာရခြင်း ဖြစ်နိုင်ခြေ 1.9 ဆခန့် ပိုများပါသည်။"]
+  ],
+  nJa:"お酒を飲んだら、自転車に乗ってはいけません。少しだけでも、量に関係なく禁止です。酒気帯び運転は、3年以下の拘禁刑または50万円以下の罰金です。ひどく酔って乗る酒酔い運転は、5年以下の拘禁刑または100万円以下の罰金です。お酒を飲んだ人に自転車を貸した人も、同じ罰になります。お酒を出した人や、一緒に乗せてもらった人も罰せられます。飲酒運転は青切符ではなく、刑事手続になります。飲酒ありの事故は、死亡や重いけがになる割合が約1.9倍です。飲んだ日は自転車を置いて、歩くか電車やバスで帰りましょう。",
+  nMy:"အရက်သောက်ပြီးလျှင် စက်ဘီး မစီးရပါ။ နည်းနည်းပဲ သောက်ထားသည်ဖြစ်စေ ပမာဏ မည်မျှပင်ဖြစ်စေ တားမြစ်ထားပါသည်။ အရက်သောက်၍ စီးလျှင် ထောင်ဒဏ် 3 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 500,000 ယန်းအထိ ချမှတ်ခံရပါသည်။ အရက်အလွန်မူးနေပြီး စီးလျှင် ထောင်ဒဏ် 5 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 1,000,000 ယန်းအထိ ချမှတ်ခံရပါသည်။ အရက်သောက်ထားသူကို စက်ဘီးငှားပေးသူလည်း အပြစ်ဒဏ် အတူတူ ခံရပါသည်။ အရက်တိုက်သူနှင့် အတူလိုက်စီးသူလည်း အပြစ်ဒဏ် ခံရပါသည်။ အရက်သောက်၍ စီးခြင်းသည် အပြာရောင်လက်မှတ် မဟုတ်ဘဲ ရာဇဝတ်မှု လုပ်ထုံးလုပ်နည်းဖြင့် ဆောင်ရွက်ပါသည်။ အရက်သောက်ထားသော မတော်တဆမှုတွင် သေဆုံးခြင်း သို့မဟုတ် ပြင်းထန်စွာ ဒဏ်ရာရခြင်း ဖြစ်နိုင်ခြေ 1.9 ဆခန့် ပိုများပါသည်။ အရက်သောက်သောနေ့တွင် စက်ဘီးကို ထားခဲ့ပြီး လမ်းလျှောက်၍ သို့မဟုတ် ရထား၊ ဘတ်စ်ကားဖြင့် ပြန်ပါ။"
+ },
+ b_ban: {
+  tJa:"並進・二人乗り・傘・イヤホン",
+  tMy:"ဘေးချင်းယှဉ်စီးခြင်း၊ နှစ်ယောက်စီးခြင်း၊ ထီး၊ နားကြပ်",
+  pts:[
+   ["横に並んで走らない（3千円）。「並進可」の所は2台まで","ဘေးချင်းယှဉ်၍ မစီးရပါ (3,000 ယန်း)။ ယှဉ်စီးခွင့်ပြု ဆိုင်းဘုတ်ရှိသောနေရာတွင် 2 စီးအထိ ယှဉ်စီးနိုင်ပါသည်။"],
+   ["二人乗りは禁止（3千円）。幼児用座席の子どもなどは例外","နှစ်ယောက်စီးခြင်းကို တားမြစ်ထားပါသည် (3,000 ယန်း)။ ကလေးထိုင်ခုံပေါ်ရှိ ကလေး စသည်တို့မှာ ခြွင်းချက် ဖြစ်ပါသည်။"],
+   ["傘を差して運転しない（5千円）。全国で禁止","ထီးဆောင်း၍ မစီးရပါ (5,000 ယန်း)။ ဂျပန်တစ်နိုင်ငံလုံးတွင် တားမြစ်ထားပါသည်။"],
+   ["イヤホンで周りの音が聞こえない運転は禁止（5千円）","နားကြပ်တပ်ထား၍ ပတ်ဝန်းကျင်အသံ မကြားရသော အခြေအနေဖြင့် မစီးရပါ (5,000 ယန်း)။"],
+   ["手放し運転・ウイリーなどは安全運転義務違反（6千円）","လက်လွှတ်စီးခြင်း၊ ရှေ့ဘီးမြှောက်စီးခြင်း စသည်တို့သည် ဘေးကင်းစွာ စီးရမည့် တာဝန်ကို ချိုးဖောက်ခြင်း ဖြစ်ပါသည် (6,000 ယန်း)။"]
+  ],
+  nJa:"危ない乗り方のルールです。2台以上で横に並んで走る並進は禁止で、反則金は3千円です。並進可の標識がある所だけ、2台まで並べます。二人乗りも禁止で、3千円です。ただし、幼児用座席に小さな子どもを乗せるときなどは例外です。傘を差して運転するのは、全国で禁止です。反則金は5千円です。雨の日はレインコートを着ましょう。イヤホンで周りの音が聞こえない状態の運転も5千円です。片耳だけや、耳をふさがない型で、必要な音が聞こえるなら違反になりません。手放し運転やウイリーは6千円です。",
+  nMy:"အန္တရာယ်ရှိသော စီးနည်းများအကြောင်း ဖြစ်ပါသည်။ စက်ဘီး 2 စီးနှင့်အထက် ဘေးချင်းယှဉ်၍ စီးခြင်းကို တားမြစ်ထားပြီး ဒဏ်ကြေး 3,000 ယန်း ဖြစ်ပါသည်။ ယှဉ်စီးခွင့်ပြု ဆိုင်းဘုတ်ရှိသောနေရာတွင်သာ 2 စီးအထိ ယှဉ်စီးနိုင်ပါသည်။ နှစ်ယောက်စီးခြင်းကိုလည်း တားမြစ်ထားပြီး 3,000 ယန်း ဖြစ်ပါသည်။ သို့သော် ကလေးထိုင်ခုံပေါ်တွင် ကလေးငယ်ကို တင်သောအခါ စသည်တို့မှာ ခြွင်းချက် ဖြစ်ပါသည်။ ထီးဆောင်း၍ စီးခြင်းကို ဂျပန်တစ်နိုင်ငံလုံးတွင် တားမြစ်ထားပြီး ဒဏ်ကြေး 5,000 ယန်း ဖြစ်ပါသည်။ မိုးရွာသောနေ့တွင် မိုးကာအင်္ကျီ ဝတ်ပါ။ နားကြပ်တပ်ထား၍ ပတ်ဝန်းကျင်အသံ မကြားရသော အခြေအနေဖြင့် စီးခြင်းလည်း 5,000 ယန်း ဖြစ်ပါသည်။ နားတစ်ဖက်တည်း တပ်ခြင်း သို့မဟုတ် နားကို မပိတ်သော အမျိုးအစားဖြင့် လိုအပ်သောအသံကို ကြားရလျှင် ချိုးဖောက်မှု မဖြစ်ပါ။ လက်လွှတ်စီးခြင်းနှင့် ရှေ့ဘီးမြှောက်စီးခြင်းသည် 6,000 ယန်း ဖြစ်ပါသည်။"
+ },
+ b_night: {
+  tJa:"夜はライト・反射材",
+  tMy:"ညဘက်တွင် မီးဖွင့်ပါ၊ အလင်းပြန်ပစ္စည်း တပ်ပါ",
+  pts:[
+   ["夜はライト（前照灯）と尾灯をつける。無灯火は5千円","ညဘက်တွင် ရှေ့မီးနှင့် နောက်မီးကို ဖွင့်ပါ။ မီးမဖွင့်ဘဲ စီးလျှင် 5,000 ယန်း ဖြစ်ပါသည်။"],
+   ["反射器材をつける（尾灯をつけていれば不要）","အလင်းပြန်ပစ္စည်း တပ်ထားပါ (နောက်မီး ဖွင့်ထားလျှင် မလိုပါ)။"],
+   ["ライトは10m先が見える明るさに","ရှေ့မီးသည် 10 မီတာ အကွာကို မြင်ရလောက်အောင် လင်းရပါမည်။"],
+   ["無灯火の事故は、死亡する割合が点灯時の約1.8倍","မီးမဖွင့်ဘဲ မတော်တဆမှုဖြစ်လျှင် သေဆုံးနိုင်ခြေသည် မီးဖွင့်ထားသည့်အခါထက် 1.8 ဆခန့် ပိုများပါသည်။"],
+   ["暗くなってきたら早めに点灯。車から見えるようにする","မှောင်လာလျှင် စောစော မီးဖွင့်ပါ။ ကားမောင်းသူက မြင်နိုင်အောင် လုပ်ပါ။"]
+  ],
+  nJa:"夜に自転車に乗るときは、前のライトと後ろの尾灯をつけなければなりません。ライトをつけない無灯火は、反則金5千円です。後ろには反射器材をつけます。尾灯をつけていれば、反射器材はなくてもかまいません。ライトは、10メートル先が見えるくらいの明るさが必要です。ライトをつけずに事故にあうと、死亡する割合は、つけているときの約1.8倍になります。ライトは自分が前を見るためだけでなく、車や歩行者に自分がいることを知らせるためのものです。暗くなってきたら、早めにつけましょう。",
+  nMy:"ညဘက်တွင် စက်ဘီးစီးသောအခါ ရှေ့မီးနှင့် နောက်မီးကို ဖွင့်ရပါမည်။ မီးမဖွင့်ဘဲ စီးလျှင် ဒဏ်ကြေး 5,000 ယန်း ဖြစ်ပါသည်။ နောက်ဘက်တွင် အလင်းပြန်ပစ္စည်း တပ်ရပါမည်။ နောက်မီး ဖွင့်ထားလျှင် အလင်းပြန်ပစ္စည်း မရှိလည်း ရပါသည်။ ရှေ့မီးသည် 10 မီတာ အကွာကို မြင်ရလောက်အောင် လင်းရပါမည်။ မီးမဖွင့်ဘဲ မတော်တဆမှု ဖြစ်လျှင် သေဆုံးနိုင်ခြေသည် မီးဖွင့်ထားသည့်အခါထက် 1.8 ဆခန့် ပိုများပါသည်။ မီးသည် ကိုယ်တိုင် ရှေ့ကိုမြင်ရန်အတွက်သာ မဟုတ်ဘဲ ကားမောင်းသူနှင့် လမ်းလျှောက်သူများကို မိမိရှိနေကြောင်း သိစေရန်လည်း ဖြစ်ပါသည်။ မှောင်လာလျှင် စောစော မီးဖွင့်ပါ။"
+ },
+ b_danger1: {
+  tJa:"事故が多い場面① 出会い頭",
+  tMy:"မတော်တဆမှု များသောအခြေအနေ 1 – လမ်းဆုံတွင် ရုတ်တရက် ဆုံခြင်း",
+  pts:[
+   ["自転車の事故の約8割は、自動車が相手","စက်ဘီး မတော်တဆမှု၏ 80 ရာခိုင်နှုန်းခန့်သည် ကားနှင့် တိုက်မိခြင်း ဖြစ်ပါသည်။"],
+   ["車との死亡・重傷事故：出会い頭54.7%、右左折時27.7%","ကားနှင့် သေဆုံး၊ ပြင်းထန်ဒဏ်ရာ မတော်တဆမှုတွင် လမ်းဆုံ၌ ရုတ်တရက်ဆုံခြင်း 54.7%၊ ညာကွေ့ ဘယ်ကွေ့ချိန် 27.7% ဖြစ်ပါသည်။"],
+   ["見通しの悪い交差点は徐行。止まれの標識では必ず止まる","ရှေ့ကို ကောင်းကောင်း မမြင်ရသော လမ်းဆုံတွင် ဖြည်းဖြည်းမောင်းပါ။ ရပ်ရန် ဆိုင်းဘုတ်တွင် မဖြစ်မနေ ရပ်ပါ။"],
+   ["止まって左右をよく見る。車に見えていると思わない","ရပ်ပြီး ဘယ်ညာကို သေချာကြည့်ပါ။ ကားက မိမိကို မြင်နေသည်ဟု မထင်ပါနှင့်။"],
+   ["事故が多いのは朝8時ごろと夕方5時ごろ（通勤時間）","မတော်တဆမှု များသောအချိန်မှာ နံနက် 8 နာရီခန့်နှင့် ညနေ 5 နာရီခန့် (အလုပ်သွားပြန်ချိန်) ဖြစ်ပါသည်။"]
+  ],
+  nJa:"自転車の事故の約8割は、自動車が相手です。自転車と自動車の死亡や重傷の事故で一番多いのは、交差点で出会い頭にぶつかる事故で、54.7パーセントです。右折や左折のときの事故が27.7パーセントで、合わせると8割をこえます。見通しの悪い交差点では徐行し、止まれの標識があれば、必ず一時停止します。止まったら左右をよく見て、車がいないことを確かめてから進みます。車の運転手が自分に気づいていると思ってはいけません。事故が多いのは、朝8時ごろと夕方5時ごろの通勤の時間です。急いでいるときこそ注意しましょう。",
+  nMy:"စက်ဘီး မတော်တဆမှု၏ 80 ရာခိုင်နှုန်းခန့်သည် ကားနှင့် တိုက်မိခြင်း ဖြစ်ပါသည်။ စက်ဘီးနှင့် ကား သေဆုံးခြင်း၊ ပြင်းထန်စွာ ဒဏ်ရာရခြင်း မတော်တဆမှုတွင် အများဆုံးမှာ လမ်းဆုံ၌ ရုတ်တရက် ဆုံမိ၍ တိုက်မိခြင်း ဖြစ်ပြီး 54.7 ရာခိုင်နှုန်း ဖြစ်ပါသည်။ ညာကွေ့ ဘယ်ကွေ့ချိန် မတော်တဆမှုမှာ 27.7 ရာခိုင်နှုန်း ဖြစ်ပြီး ပေါင်းလျှင် 80 ရာခိုင်နှုန်းကျော် ဖြစ်ပါသည်။ ရှေ့ကို ကောင်းကောင်း မမြင်ရသော လမ်းဆုံတွင် ဖြည်းဖြည်းမောင်းပြီး ရပ်ရန် ဆိုင်းဘုတ်ရှိလျှင် မဖြစ်မနေ ခဏရပ်တန့်ပါ။ ရပ်ပြီးလျှင် ဘယ်ညာကို သေချာကြည့်ပြီး ကားမလာကြောင်း သေချာမှ ဆက်သွားပါ။ ကားမောင်းသူက မိမိကို မြင်နေသည်ဟု မထင်ပါနှင့်။ မတော်တဆမှု များသောအချိန်မှာ နံနက် 8 နာရီခန့်နှင့် ညနေ 5 နာရီခန့် အလုပ်သွားပြန်ချိန် ဖြစ်ပါသည်။ အလျင်လိုနေချိန်တွင် ပို၍ သတိထားပါ။"
+ },
+ b_danger2: {
+  tJa:"事故が多い場面② 左折車の巻き込み・死角",
+  tMy:"မတော်တဆမှု များသောအခြေအနေ 2 – ဘယ်ကွေ့ကားကြား ညှပ်မိခြင်းနှင့် မမြင်ရသောနေရာ",
+  pts:[
+   ["大型車の運転席からは、左横や後ろが見えにくい（死角）","ကားကြီး၏ ယာဉ်မောင်းထိုင်ခုံမှ ဘယ်ဘက်ဘေးနှင့် နောက်ဘက်ကို မြင်ရခက်ပါသည် (မမြင်ရသောနေရာ)။"],
+   ["左折する車の後輪は、前輪より内側を通る（内輪差）","ဘယ်ကွေ့သောကား၏ နောက်ဘီးသည် ရှေ့ဘီးထက် အတွင်းဘက်ကို ဖြတ်သွားပါသည်။"],
+   ["左折しそうな車、特にトラックの横に並ばない","ဘယ်ကွေ့မည့်ကား အထူးသဖြင့် ထရပ်ကားကြီး၏ ဘေးတွင် ယှဉ်၍ မနေပါနှင့်။"],
+   ["無理に横をすり抜けず、後ろで待つ","အတင်း ဘေးမှ ဖြတ်မတက်ဘဲ နောက်တွင် စောင့်ပါ။"],
+   ["自分が左折するときも左端に寄り、徐行する","မိမိ ဘယ်ကွေ့သောအခါလည်း ဘယ်ဘက်အစွန်သို့ ကပ်ပြီး ဖြည်းဖြည်းမောင်းပါ။"]
+  ],
+  nJa:"左に曲がる車に巻き込まれる事故です。トラックやバスなどの大型車は、運転席から左の横や後ろが見えにくく、自転車がいても気づかないことがあります。これを死角といいます。また、車が左に曲がるとき、後ろのタイヤは前のタイヤより内側を通ります。これを内輪差といいます。そのため、自転車が車の左横にいると、巻き込まれてしまいます。左に曲がりそうな車、特に大きなトラックの横には並ばないでください。無理に横をすり抜けず、後ろで待ちましょう。自分が左に曲がるときも、左の端に寄って徐行します。",
+  nMy:"ဘယ်ကွေ့သောကားကြား ညှပ်မိသော မတော်တဆမှု ဖြစ်ပါသည်။ ထရပ်ကားနှင့် ဘတ်စ်ကားကဲ့သို့ ကားကြီးများသည် ယာဉ်မောင်းထိုင်ခုံမှ ဘယ်ဘက်ဘေးနှင့် နောက်ဘက်ကို မြင်ရခက်ပြီး စက်ဘီးရှိနေသော်လည်း သတိမထားမိတတ်ပါ။ ဤနေရာကို မမြင်ရသောနေရာဟု ခေါ်ပါသည်။ ထို့အပြင် ကား ဘယ်ကွေ့သောအခါ နောက်ဘီးသည် ရှေ့ဘီးထက် အတွင်းဘက်ကို ဖြတ်သွားပါသည်။ ထို့ကြောင့် စက်ဘီးသည် ကား၏ ဘယ်ဘက်ဘေးတွင် ရှိနေလျှင် ညှပ်မိ၍ တိုက်မိနိုင်ပါသည်။ ဘယ်ကွေ့မည့်ကား အထူးသဖြင့် ထရပ်ကားကြီး၏ ဘေးတွင် ယှဉ်၍ မနေပါနှင့်။ အတင်း ဘေးမှ ဖြတ်မတက်ဘဲ နောက်တွင် စောင့်ပါ။ မိမိ ဘယ်ကွေ့သောအခါလည်း ဘယ်ဘက်အစွန်သို့ ကပ်ပြီး ဖြည်းဖြည်းမောင်းပါ။"
+ },
+ b_danger3: {
+  tJa:"事故が多い場面③ ドア・雨の日",
+  tMy:"မတော်တဆမှု များသောအခြေအနေ 3 – ကားတံခါးနှင့် မိုးရွာသောနေ့",
+  pts:[
+   ["止まっている車のドアが急に開くことがある","ရပ်ထားသောကား၏ တံခါး ရုတ်တရက် ပွင့်လာတတ်ပါသည်။"],
+   ["止まっている車の横は、間をあけて注意して通る","ရပ်ထားသောကား၏ ဘေးကို ဖြတ်သောအခါ ခပ်ခွာခွာနှင့် သတိထား၍ ဖြတ်ပါ။"],
+   ["雨の日は道がすべりやすい。急ブレーキは転びやすい","မိုးရွာသောနေ့တွင် လမ်းချော်လွယ်ပါသည်။ ဘရိတ်ကို ရုတ်တရက် အုပ်လျှင် လဲလွယ်ပါသည်။"],
+   ["道が凍っているとき、風雨が強いときは降りて押して歩く","လမ်းခဲနေချိန်၊ လေနှင့်မိုး ပြင်းထန်ချိန်တွင် စက်ဘီးမှဆင်း၍ တွန်းပြီး လမ်းလျှောက်ပါ။"],
+   ["雨の日は早めにブレーキ。スピードを落とす","မိုးရွာသောနေ့တွင် ဘရိတ်ကို စောစော အုပ်ပြီး အရှိန်လျှော့ပါ။"]
+  ],
+  nJa:"道の端に止まっている車の横を通るときは、ドアが急に開くことがあります。ドアにぶつかって転び、後ろから来た車にひかれる危険もあります。止まっている車の横は、間をあけて、注意して通りましょう。右に出るときは、後ろから車が来ていないか確かめます。雨の日は、道がすべりやすくなります。急ブレーキをかけると転びやすいので、スピードを落として、早めにブレーキをかけましょう。道が凍っているときや、風や雨が強いときは、自転車を降りて、押して歩きましょう。",
+  nMy:"လမ်းဘေးတွင် ရပ်ထားသောကား၏ ဘေးမှ ဖြတ်သောအခါ ကားတံခါး ရုတ်တရက် ပွင့်လာတတ်ပါသည်။ တံခါးနှင့် တိုက်မိ၍ လဲပြီး နောက်မှလာသောကား တိုက်မိနိုင်သော အန္တရာယ်လည်း ရှိပါသည်။ ရပ်ထားသောကား၏ ဘေးကို ခပ်ခွာခွာနှင့် သတိထား၍ ဖြတ်ပါ။ ညာဘက်သို့ ထွက်သောအခါ နောက်မှ ကားလာနေခြင်း ရှိမရှိ သေချာကြည့်ပါ။ မိုးရွာသောနေ့တွင် လမ်းချော်လွယ်ပါသည်။ ဘရိတ်ကို ရုတ်တရက် အုပ်လျှင် လဲလွယ်သောကြောင့် အရှိန်လျှော့ပြီး ဘရိတ်ကို စောစော အုပ်ပါ။ လမ်းခဲနေချိန် သို့မဟုတ် လေနှင့်မိုး ပြင်းထန်ချိန်တွင် စက်ဘီးမှဆင်း၍ တွန်းပြီး လမ်းလျှောက်ပါ။"
+ },
+ b_side: {
+  tJa:"車に追い越されるとき（2026年4月から）",
+  tMy:"ကားက ကျော်တက်သွားသောအခါ (2026 ခုနှစ် ဧပြီလမှစ၍)",
+  pts:[
+   ["2026年4月1日からの新しいルール","2026 ခုနှစ် ဧပြီလ 1 ရက်မှစ၍ စတင်သော စည်းကမ်းသစ် ဖြစ်ပါသည်။"],
+   ["車が自転車の右を通るとき、間隔がせまければ安全な速度で","ကားသည် စက်ဘီး၏ ညာဘက်မှ ဖြတ်သွားသောအခါ အကွာအဝေး မလုံလောက်လျှင် ဘေးကင်းသော အရှိန်ဖြင့် သွားရပါမည်။"],
+   ["そのとき自転車は、できる限り道路の左端に寄る","ထိုအခါ စက်ဘီးသည် လမ်း၏ ဘယ်ဘက်အစွန်သို့ တတ်နိုင်သမျှ ကပ်ရပါမည်။"],
+   ["自転車が左端に寄らないと違反（5千円）","စက်ဘီး ဘယ်ဘက်အစွန်သို့ မကပ်လျှင် ချိုးဖောက်မှု ဖြစ်ပါသည် (5,000 ယန်း)။"],
+   ["急に右へ出ない。後ろの車の音に気をつける","ရုတ်တရက် ညာဘက်သို့ မထွက်ပါနှင့်။ နောက်မှလာသော ကားအသံကို သတိထားပါ။"]
+  ],
+  nJa:"2026年4月1日から、新しいルールが始まりました。自動車が、同じ方向に進む自転車の右側を通るとき、自転車との間隔が十分にとれなければ、間隔に合わせた安全な速度で進まなければなりません。そのとき自転車は、できる限り道路の左の端に寄らなければなりません。寄らないと違反になり、反則金は5千円です。車と自転車がおたがいに気をつけるためのルールです。車に追い越されるときは、ふらつかないようにまっすぐ走り、急に右へ出ないようにしましょう。",
+  nMy:"2026 ခုနှစ် ဧပြီလ 1 ရက်မှစ၍ စည်းကမ်းသစ် စတင်ခဲ့ပါသည်။ ကားသည် တစ်ဖက်တည်းသို့ သွားနေသော စက်ဘီး၏ ညာဘက်မှ ဖြတ်သွားသောအခါ စက်ဘီးနှင့် အကွာအဝေး လုံလောက်စွာ မခြားနိုင်လျှင် အကွာအဝေးနှင့် ကိုက်ညီသော ဘေးကင်းသည့် အရှိန်ဖြင့် သွားရပါမည်။ ထိုအခါ စက်ဘီးသည် လမ်း၏ ဘယ်ဘက်အစွန်သို့ တတ်နိုင်သမျှ ကပ်ရပါမည်။ မကပ်လျှင် ချိုးဖောက်မှု ဖြစ်ပြီး ဒဏ်ကြေး 5,000 ယန်း ဖြစ်ပါသည်။ ဤစည်းကမ်းသည် ကားနှင့် စက်ဘီး နှစ်ဦးစလုံး အချင်းချင်း သတိထားရန် ဖြစ်ပါသည်။ ကားက ကျော်တက်သွားသောအခါ ယိမ်းယိုင်ခြင်းမရှိဘဲ တည့်တည့် စီးပြီး ရုတ်တရက် ညာဘက်သို့ မထွက်ပါနှင့်။"
+ },
+ b_aokippu: {
+  tJa:"青切符（2026年4月から）",
+  tMy:"အပြာရောင်လက်မှတ် (2026 ခုနှစ် ဧပြီလမှစ၍)",
+  pts:[
+   ["2026年4月1日から、16歳以上の自転車の違反に青切符","2026 ခုနှစ် ဧပြီလ 1 ရက်မှစ၍ အသက် 16 နှစ်နှင့်အထက် စက်ဘီးစီးသူ၏ ချိုးဖောက်မှုတွင် အပြာရောင်လက်မှတ် ပေးပါသည်။"],
+   ["基本は指導警告。悪質・危険な違反は取り締まられる","အခြေခံအားဖြင့် သတိပေးခြင်း ဖြစ်ပါသည်။ ဆိုးရွားပြီး အန္တရာယ်ရှိသော ချိုးဖောက်မှုကို ဖမ်းဆီးအရေးယူပါသည်။"],
+   ["スマホ1万2千円、踏切7千円、信号無視・逆走6千円","ဖုန်းကိုင်စီးခြင်း 12,000 ယန်း၊ ရထားလမ်းကူး 7,000 ယန်း၊ မီးပွိုင့်ချိုးခြင်းနှင့် ပြောင်းပြန်စီးခြင်း 6,000 ယန်း။"],
+   ["一時不停止・無灯火・傘・イヤホン5千円、並進・二人乗り3千円","ခဏမရပ်ခြင်း၊ မီးမဖွင့်ခြင်း၊ ထီး၊ နားကြပ် 5,000 ယန်း၊ ယှဉ်စီးခြင်း၊ နှစ်ယောက်စီးခြင်း 3,000 ယန်း။"],
+   ["7日以内に納めれば前科なし。飲酒運転などは刑事手続","7 ရက်အတွင်း ပေးဆောင်လျှင် ပြစ်မှုမှတ်တမ်း မတင်ပါ။ အရက်သောက်စီးခြင်း စသည်တို့မှာ ရာဇဝတ်မှု လုပ်ထုံးလုပ်နည်း ဖြစ်ပါသည်။"]
+  ],
+  nJa:"2026年4月1日から、16歳以上の人の自転車の違反に、青切符が使われています。基本は指導警告ですが、悪質で危険な違反は取り締まられます。反則金は、ながらスマホが1万2千円、遮断機が下りかけている踏切に入ると7千円、信号無視や逆走は6千円、一時不停止や無灯火、傘差し、イヤホンは5千円、並進や二人乗りは3千円です。青切符を受けた次の日から、原則7日以内に納めれば、前科はつきません。飲酒運転などは青切符ではなく、刑事手続です。危険な違反を3年以内に2回以上すると、講習を受けなければなりません。",
+  nMy:"2026 ခုနှစ် ဧပြီလ 1 ရက်မှစ၍ အသက် 16 နှစ်နှင့်အထက် စက်ဘီးစီးသူ၏ ချိုးဖောက်မှုတွင် အပြာရောင်လက်မှတ်ကို အသုံးပြုပါသည်။ အခြေခံအားဖြင့် သတိပေးခြင်း ဖြစ်သော်လည်း ဆိုးရွားပြီး အန္တရာယ်ရှိသော ချိုးဖောက်မှုကို ဖမ်းဆီးအရေးယူပါသည်။ ဒဏ်ကြေးမှာ ဖုန်းကိုင်၍ စီးခြင်း 12,000 ယန်း၊ ဂိတ်တံ ကျလာနေသော ရထားလမ်းကူးထဲ ဝင်ခြင်း 7,000 ယန်း၊ မီးပွိုင့်ချိုးခြင်းနှင့် ပြောင်းပြန်စီးခြင်း 6,000 ယန်း၊ ခဏမရပ်ခြင်း၊ မီးမဖွင့်ခြင်း၊ ထီးဆောင်းခြင်း၊ နားကြပ်တပ်ခြင်း 5,000 ယန်း၊ ယှဉ်စီးခြင်းနှင့် နှစ်ယောက်စီးခြင်း 3,000 ယန်း ဖြစ်ပါသည်။ လက်မှတ်ရသည့် နောက်နေ့မှစ၍ မူအားဖြင့် 7 ရက်အတွင်း ပေးဆောင်လျှင် ပြစ်မှုမှတ်တမ်း မတင်ပါ။ အရက်သောက်စီးခြင်း စသည်တို့မှာ အပြာရောင်လက်မှတ် မဟုတ်ဘဲ ရာဇဝတ်မှု လုပ်ထုံးလုပ်နည်း ဖြစ်ပါသည်။ အန္တရာယ်ရှိသော ချိုးဖောက်မှုကို 3 နှစ်အတွင်း 2 ကြိမ်နှင့်အထက် ပြုလျှင် သင်တန်း တက်ရပါမည်။"
+ },
+ b_helmet: {
+  tJa:"ヘルメットをかぶろう",
+  tMy:"ဟယ်လ်မက် ဆောင်းပါ",
+  pts:[
+   ["すべての人にヘルメットをかぶる努力義務（2023年4月から）","2023 ခုနှစ် ဧပြီလမှစ၍ စက်ဘီးစီးသူ အားလုံး ဟယ်လ်မက် ဆောင်းရန် ကြိုးစားရမည့် တာဝန် ရှိပါသည်။"],
+   ["反則金はないが、命を守るためにかぶる","ဒဏ်ကြေး မရှိသော်လည်း အသက်ကို ကာကွယ်ရန် ဆောင်းပါ။"],
+   ["死者の約半数は、頭のけがが主な原因","သေဆုံးသူ၏ ထက်ဝက်ခန့်သည် ခေါင်းဒဏ်ရာ အဓိက ဖြစ်ပါသည်။"],
+   ["かぶらないと、頭のけがで死亡する割合が約1.4倍","မဆောင်းလျှင် ခေါင်းဒဏ်ရာဖြင့် သေဆုံးနိုင်ခြေ 1.4 ဆခန့် ပိုများပါသည်။"],
+   ["子どもにもかぶらせる。あごひもをしっかりしめる","ကလေးကိုလည်း ဆောင်းစေပါ။ မေးသိုင်းကြိုးကို သေချာ ချည်ပါ။"]
+  ],
+  nJa:"2023年4月から、自転車に乗るすべての人に、ヘルメットをかぶる努力義務があります。かぶらなくても反則金はありませんが、自分の命を守るために、必ずかぶりましょう。自転車の事故で亡くなった人の約半数は、頭のけがが主な原因です。頭にけがをしたとき、ヘルメットをかぶっていなかった人が亡くなる割合は、かぶっていた人の約1.4倍です。子どもを乗せるときは、子どもにもかぶらせるよう努めます。ヘルメットは頭に合ったものを選び、あごひもをしっかりしめましょう。",
+  nMy:"2023 ခုနှစ် ဧပြီလမှစ၍ စက်ဘီးစီးသူ အားလုံးတွင် ဟယ်လ်မက် ဆောင်းရန် ကြိုးစားရမည့် တာဝန် ရှိပါသည်။ မဆောင်းလည်း ဒဏ်ကြေး မရှိသော်လည်း မိမိအသက်ကို ကာကွယ်ရန် မဖြစ်မနေ ဆောင်းပါ။ စက်ဘီး မတော်တဆမှုဖြင့် သေဆုံးသူ၏ ထက်ဝက်ခန့်သည် ခေါင်းဒဏ်ရာ အဓိက ဖြစ်ပါသည်။ ခေါင်းဒဏ်ရာ ရသောအခါ ဟယ်လ်မက် မဆောင်းထားသူ သေဆုံးနိုင်ခြေသည် ဆောင်းထားသူထက် 1.4 ဆခန့် ပိုများပါသည်။ ကလေးကို တင်သောအခါ ကလေးကိုလည်း ဆောင်းစေရန် ကြိုးစားပါ။ ဟယ်လ်မက်ကို ခေါင်းနှင့် ကိုက်ညီသည့်အရွယ် ရွေးပြီး မေးသိုင်းကြိုးကို သေချာ ချည်ပါ။"
+ },
+ b_check: {
+  tJa:"乗る前の点検と防犯登録",
+  tMy:"မစီးမီ စစ်ဆေးခြင်းနှင့် ခိုးမှုကာကွယ်ရေး မှတ်ပုံတင်ခြင်း",
+  pts:[
+   ["ブレーキは前後とも効くか。時速10kmで3m以内に止まれる","ရှေ့နောက် ဘရိတ် နှစ်ခုလုံး ကောင်းမကောင်း စစ်ပါ။ တစ်နာရီ 10 ကီလိုမီတာဖြင့် 3 မီတာအတွင်း ရပ်နိုင်ရပါမည်။"],
+   ["ライト・尾灯・反射器材・ベル・タイヤ・サドル・ハンドル・チェーン","ရှေ့မီး၊ နောက်မီး၊ အလင်းပြန်ပစ္စည်း၊ ခေါင်းလောင်း၊ တာယာ၊ ထိုင်ခုံ၊ လက်ကိုင်၊ ချိန်းကြိုး။"],
+   ["ブレーキのない自転車は違反（5千円）","ဘရိတ်မပါသော စက်ဘီးသည် ချိုးဖောက်မှု ဖြစ်ပါသည် (5,000 ယန်း)။"],
+   ["安全な自転車のマーク：TS・JIS・BAA・SG","ဘေးကင်းသော စက်ဘီး အမှတ်တံဆိပ် – TS၊ JIS၊ BAA၊ SG။"],
+   ["防犯登録は法律で義務。手数料などは都道府県で違う","ခိုးမှုကာကွယ်ရေး မှတ်ပုံတင်ခြင်းသည် ဥပဒေအရ တာဝန် ဖြစ်ပါသည်။ ကြေးငွေ စသည်တို့မှာ ခရိုင်အလိုက် မတူပါ။"]
+  ],
+  nJa:"乗る前に、自転車を点検しましょう。ブレーキは、前と後ろの両方が効くかを確かめます。時速10キロで走っているとき、3メートル以内に止まれることが必要です。ライトや尾灯、反射器材、ベル、タイヤの空気、サドルとハンドルのゆるみ、チェーンも見ます。ブレーキのない自転車に乗るのは違反で、反則金は5千円です。自転車を買うときは、TS、JIS、BAA、SGなどの安全のマークを目安にしましょう。防犯登録は法律で義務になっています。手数料などは都道府県によって違います。",
+  nMy:"မစီးမီ စက်ဘီးကို စစ်ဆေးပါ။ ဘရိတ်သည် ရှေ့နှင့်နောက် နှစ်ခုလုံး ကောင်းမကောင်း စစ်ပါ။ တစ်နာရီ 10 ကီလိုမီတာဖြင့် စီးနေချိန် 3 မီတာအတွင်း ရပ်နိုင်ရပါမည်။ ရှေ့မီး၊ နောက်မီး၊ အလင်းပြန်ပစ္စည်း၊ ခေါင်းလောင်း၊ တာယာလေ၊ ထိုင်ခုံနှင့် လက်ကိုင် ချောင်နေခြင်း ရှိမရှိ၊ ချိန်းကြိုးကိုလည်း ကြည့်ပါ။ ဘရိတ်မပါသော စက်ဘီး စီးခြင်းသည် ချိုးဖောက်မှု ဖြစ်ပြီး ဒဏ်ကြေး 5,000 ယန်း ဖြစ်ပါသည်။ စက်ဘီး ဝယ်သောအခါ TS၊ JIS၊ BAA၊ SG စသည့် ဘေးကင်းရေး အမှတ်တံဆိပ်ကို ကြည့်ပါ။ ခိုးမှုကာကွယ်ရေး မှတ်ပုံတင်ခြင်းသည် ဥပဒေအရ တာဝန် ဖြစ်ပါသည်။ ကြေးငွေ စသည်တို့မှာ ခရိုင်အလိုက် မတူပါ။"
+ },
+ b_insurance: {
+  tJa:"自転車保険と高額な賠償",
+  tMy:"စက်ဘီး အာမခံနှင့် လျော်ကြေးငွေ အမြောက်အမြား",
+  pts:[
+   ["相手にけがをさせると、高額な損害賠償になることがある","တစ်ဖက်လူကို ဒဏ်ရာရစေလျှင် လျော်ကြေးငွေ အလွန်များနိုင်ပါသည်။"],
+   ["例：9,521万円（小学生の事故、親に責任）、9,266万円","ဥပမာ – ယန်း 95,210,000 (မူလတန်းကျောင်းသား၏ မတော်တဆမှု၊ မိဘ တာဝန်ရှိ)၊ ယန်း 92,660,000။"],
+   ["神奈川県・相模原市：自転車保険の加入が義務","ကာနာဂါဝါခရိုင်နှင့် ဆာဂါမိဟာရမြို့ – စက်ဘီး အာမခံ ဝင်ရန် တာဝန် ရှိပါသည်။"],
+   ["岡山県：2024年10月から加入が義務。会社も加入の確認に努める","အိုကာယာမာခရိုင် – 2024 ခုနှစ် အောက်တိုဘာလမှစ၍ အာမခံ ဝင်ရန် တာဝန် ရှိပါသည်။ ကုမ္ပဏီကလည်း စစ်ဆေးရန် ကြိုးစားရပါသည်။"],
+   ["罰則はないが、必ず保険に入る","ပြစ်ဒဏ် မရှိသော်လည်း အာမခံကို မဖြစ်မနေ ဝင်ပါ။"]
+  ],
+  nJa:"自転車でも、相手にけがをさせると、とても高い損害賠償を払うことになります。神戸では、小学生が歩行者にぶつかった事故で、9521万円の賠償が命じられ、親の責任とされました。東京では9266万円の例や、信号無視で5438万円の例もあります。神奈川県と相模原市では、自転車保険に入ることが条例で義務です。岡山県でも2024年10月から義務になり、会社は自転車で通勤する人が保険に入っているか確かめるよう努めます。罰則はありませんが、必ず入りましょう。",
+  nMy:"စက်ဘီးဖြစ်သော်လည်း တစ်ဖက်လူကို ဒဏ်ရာရစေလျှင် အလွန်များပြားသော လျော်ကြေးငွေကို ပေးရနိုင်ပါသည်။ ကိုဘေးမြို့တွင် မူလတန်းကျောင်းသားတစ်ဦး လမ်းလျှောက်သူကို တိုက်မိသော မတော်တဆမှုတွင် ယန်း 95,210,000 လျော်ရန် အမိန့်ချခဲ့ပြီး မိဘတွင် တာဝန်ရှိသည်ဟု ဆုံးဖြတ်ခဲ့ပါသည်။ တိုကျိုတွင် ယန်း 92,660,000 ဥပမာနှင့် မီးပွိုင့်ချိုး၍ ယန်း 54,380,000 ဥပမာလည်း ရှိပါသည်။ ကာနာဂါဝါခရိုင်နှင့် ဆာဂါမိဟာရမြို့တွင် စက်ဘီး အာမခံ ဝင်ရန် ဒေသစည်းမျဉ်းအရ တာဝန် ရှိပါသည်။ အိုကာယာမာခရိုင်တွင်လည်း 2024 ခုနှစ် အောက်တိုဘာလမှစ၍ တာဝန် ဖြစ်လာပြီး ကုမ္ပဏီသည် စက်ဘီးဖြင့် အလုပ်သွားသူ အာမခံ ဝင်ထားခြင်း ရှိမရှိ စစ်ဆေးရန် ကြိုးစားရပါသည်။ ပြစ်ဒဏ် မရှိသော်လည်း မဖြစ်မနေ ဝင်ပါ။"
+ },
+ b_child: {
+  tJa:"子どもを乗せるとき・電動自転車",
+  tMy:"ကလေးကို တင်စီးသောအခါနှင့် လျှပ်စစ်စက်ဘီး",
+  pts:[
+   ["16歳以上の保護者は、小学校に入る前の子を幼児用座席に乗せられる","အသက် 16 နှစ်နှင့်အထက် မိဘ အုပ်ထိန်းသူသည် မူလတန်းမတက်ရသေးသော ကလေးကို ကလေးထိုင်ခုံတွင် တင်နိုင်ပါသည်။"],
+   ["乗せ方は都道府県の規則で決まる。乗せる前に確認","တင်ပုံ စည်းကမ်းကို ခရိုင်အလိုက် သတ်မှတ်ထားပါသည်။ မတင်မီ စစ်ဆေးပါ။"],
+   ["神奈川県：幼児用座席に1人（2人同乗用自転車なら2人）。前抱っこは不可","ကာနာဂါဝါခရိုင် – ကလေးထိုင်ခုံတွင် 1 ယောက် (ကလေး 2 ယောက်တင် စက်ဘီးဆိုလျှင် 2 ယောက်)။ ရှေ့တွင် ပွေ့ချီ၍ မစီးရပါ။"],
+   ["電動アシスト自転車：基準内なら自転車と同じ（免許不要）","လျှပ်စစ်အကူ စက်ဘီး – စံနှုန်းနှင့် ကိုက်ညီလျှင် စက်ဘီးနှင့် အတူတူ (လိုင်စင် မလိုပါ)။"],
+   ["基準外の「ペダル付き電動バイク」は免許・ナンバー・ヘルメットが必要","စံနှုန်းနှင့် မကိုက်ညီသော ခြေနင်းပါ လျှပ်စစ်ဆိုင်ကယ်သည် လိုင်စင်၊ နံပါတ်ပြား၊ ဟယ်လ်မက် လိုပါသည်။"]
+  ],
+  nJa:"二人乗りは禁止ですが、16歳以上の保護者が、小学校に入る前の子どもを幼児用座席に乗せるのは例外です。何人まで乗せられるかなどは、都道府県の規則で決まっているので、乗せる前に確認してください。たとえば神奈川県では、幼児用座席に1人、2人乗せ用の自転車なら2人までで、前に抱っこして乗るのはいけません。電動アシスト自転車は、基準を満たせば自転車と同じで、免許やナンバーはいりません。基準に合わないペダル付き電動バイクは原付などと同じで、免許、ナンバー、ヘルメットが必要です。",
+  nMy:"နှစ်ယောက်စီးခြင်းကို တားမြစ်ထားသော်လည်း အသက် 16 နှစ်နှင့်အထက် မိဘ အုပ်ထိန်းသူက မူလတန်းမတက်ရသေးသော ကလေးကို ကလေးထိုင်ခုံတွင် တင်ခြင်းမှာ ခြွင်းချက် ဖြစ်ပါသည်။ ကလေး မည်မျှအထိ တင်နိုင်သည် စသည်တို့ကို ခရိုင်အလိုက် စည်းကမ်းဖြင့် သတ်မှတ်ထားသောကြောင့် မတင်မီ စစ်ဆေးပါ။ ဥပမာ ကာနာဂါဝါခရိုင်တွင် ကလေးထိုင်ခုံတွင် 1 ယောက်၊ ကလေး 2 ယောက်တင် စက်ဘီးဆိုလျှင် 2 ယောက်အထိ ဖြစ်ပြီး ရှေ့တွင် ပွေ့ချီ၍ စီးခြင်းကို ခွင့်မပြုပါ။ လျှပ်စစ်အကူ စက်ဘီးသည် စံနှုန်းနှင့် ကိုက်ညီလျှင် စက်ဘီးနှင့် အတူတူ ဖြစ်ပြီး လိုင်စင်နှင့် နံပါတ်ပြား မလိုပါ။ စံနှုန်းနှင့် မကိုက်ညီသော ခြေနင်းပါ လျှပ်စစ်ဆိုင်ကယ်သည် မော်တာဆိုင်ကယ်ငယ် စသည်တို့နှင့် အတူတူ ဖြစ်ပြီး လိုင်စင်၊ နံပါတ်ပြားနှင့် ဟယ်လ်မက် လိုအပ်ပါသည်။"
+ },
+ b_park: {
+  tJa:"自転車をとめるとき",
+  tMy:"စက်ဘီးကို ရပ်ထားသောအခါ",
+  pts:[
+   ["歩く人や車のじゃまになる所にとめない","လမ်းလျှောက်သူနှင့် ကားများကို အနှောင့်အယှက်ဖြစ်မည့်နေရာတွင် မရပ်ထားပါနှင့်။"],
+   ["点字ブロックの上や近くにとめない","မျက်မမြင်များအတွက် အဝါရောင် လမ်းပြအကွက်ပေါ်နှင့် အနီးတွင် မရပ်ထားပါနှင့်။"],
+   ["近くに駐輪場があれば、駐輪場にとめる","အနီးတွင် စက်ဘီးရပ်နားရာနေရာ ရှိလျှင် ထိုနေရာတွင် ရပ်ထားပါ။"],
+   ["道路に置きっぱなしにしない（違反になることがある）","လမ်းပေါ်တွင် ပစ်မထားပါနှင့် (ချိုးဖောက်မှု ဖြစ်နိုင်ပါသည်)။"],
+   ["とめたら必ずかぎをかける","ရပ်ထားပြီးလျှင် သော့ကို မဖြစ်မနေ ခတ်ပါ။"]
+  ],
+  nJa:"自転車をとめるときのルールです。歩く人や車のじゃまになる所には、とめてはいけません。道に黄色い点字ブロックがあります。目の見えない人が歩くための大切な目印です。点字ブロックの上や近くには、絶対にとめないでください。近くに駐輪場があるときは、駐輪場にとめましょう。道路に自転車を置いたままにすると、違反になることがあります。また、自転車を盗まれないように、とめたら必ずかぎをかけましょう。",
+  nMy:"စက်ဘီးကို ရပ်ထားသောအခါ စည်းကမ်း ဖြစ်ပါသည်။ လမ်းလျှောက်သူနှင့် ကားများကို အနှောင့်အယှက်ဖြစ်မည့်နေရာတွင် မရပ်ထားရပါ။ လမ်းပေါ်တွင် အဝါရောင် လမ်းပြအကွက်များ ရှိပါသည်။ ၎င်းသည် မျက်မမြင်များ လမ်းလျှောက်ရန် အရေးကြီးသော အမှတ်အသား ဖြစ်ပါသည်။ ထိုအကွက်ပေါ်နှင့် အနီးတွင် လုံးဝ မရပ်ထားပါနှင့်။ အနီးတွင် စက်ဘီးရပ်နားရာနေရာ ရှိလျှင် ထိုနေရာတွင် ရပ်ထားပါ။ လမ်းပေါ်တွင် စက်ဘီးကို ပစ်ထားလျှင် ချိုးဖောက်မှု ဖြစ်နိုင်ပါသည်။ ထို့အပြင် စက်ဘီး အခိုးမခံရစေရန် ရပ်ထားပြီးလျှင် သော့ကို မဖြစ်မနေ ခတ်ပါ။"
+ },
+ b_accident: {
+  tJa:"事故が起きたら",
+  tMy:"မတော်တဆမှု ဖြစ်လျှင်",
+  pts:[
+   ["①すぐ止まる ②けが人を助ける ③危険を防ぐ ④警察に知らせる","(1) ချက်ချင်း ရပ်ပါ (2) ဒဏ်ရာရသူကို ကူညီပါ (3) အန္တရာယ် ထပ်မဖြစ်အောင် ကာကွယ်ပါ (4) ရဲကို အကြောင်းကြားပါ။"],
+   ["警察は110番、救急車は119番","ရဲ – 110၊ လူနာတင်ယာဉ် – 119။"],
+   ["けが人を助けないと、1年以下の拘禁刑または10万円以下の罰金","ဒဏ်ရာရသူကို မကူညီလျှင် ထောင်ဒဏ် 1 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 100,000 ယန်းအထိ။"],
+   ["警察に知らせないと、3か月以下の拘禁刑または5万円以下の罰金","ရဲကို အကြောင်းမကြားလျှင် ထောင်ဒဏ် 3 လအထိ သို့မဟုတ် ငွေဒဏ် 50,000 ယန်းအထိ။"],
+   ["保険会社と会社（上司）にもすぐ連絡","အာမခံကုမ္ပဏီနှင့် မိမိကုမ္ပဏီ (အထက်လူကြီး) ကိုလည်း ချက်ချင်း ဆက်သွယ်ပါ။"]
+  ],
+  nJa:"事故を起こしたら、まず、すぐに止まります。次に、けがをした人を助けます。そして、後ろから来る車などで事故が続かないように、危険を防ぎます。最後に、警察に知らせます。警察は110番、救急車は119番です。けが人を助けずに去ると、1年以下の拘禁刑または10万円以下の罰金です。警察に知らせないと、3か月以下の拘禁刑または5万円以下の罰金です。相手が大丈夫と言っても、その場で警察に知らせましょう。そのあと、保険会社と会社の上司にも、すぐに連絡してください。",
+  nMy:"မတော်တဆမှု ဖြစ်လျှင် ပထမဦးစွာ ချက်ချင်း ရပ်ပါ။ နောက်တစ်ဆင့် ဒဏ်ရာရသူကို ကူညီပါ။ ထို့နောက် နောက်မှလာသော ကားစသည်တို့ကြောင့် မတော်တဆမှု ထပ်မဖြစ်စေရန် အန္တရာယ်ကို ကာကွယ်ပါ။ နောက်ဆုံးတွင် ရဲကို အကြောင်းကြားပါ။ ရဲ ဖုန်းနံပါတ်မှာ 110၊ လူနာတင်ယာဉ်မှာ 119 ဖြစ်ပါသည်။ ဒဏ်ရာရသူကို မကူညီဘဲ ထွက်သွားလျှင် ထောင်ဒဏ် 1 နှစ်အထိ သို့မဟုတ် ငွေဒဏ် 100,000 ယန်းအထိ ချမှတ်ခံရပါသည်။ ရဲကို အကြောင်းမကြားလျှင် ထောင်ဒဏ် 3 လအထိ သို့မဟုတ် ငွေဒဏ် 50,000 ယန်းအထိ ချမှတ်ခံရပါသည်။ တစ်ဖက်လူက ရပါတယ်ဟု ပြောသော်လည်း ထိုနေရာတွင်ပင် ရဲကို အကြောင်းကြားပါ။ ထို့နောက် အာမခံကုမ္ပဏီနှင့် မိမိကုမ္ပဏီ၏ အထက်လူကြီးကိုလည်း ချက်ချင်း ဆက်သွယ်ပါ။"
+ },
+ b_end: {
+  tJa:"まとめ",
+  tMy:"အနှစ်ချုပ်",
+  pts:[
+   ["車道の左側を通る。歩道は例外で、歩行者優先","ကားလမ်း၏ ဘယ်ဘက်မှ သွားပါ။ လူသွားလမ်းသည် ခြွင်းချက်ဖြစ်ပြီး လမ်းလျှောက်သူကို ဦးစားပေးပါ။"],
+   ["信号と一時停止を守る。右折は二段階右折","မီးပွိုင့်နှင့် ခဏရပ်တန့်ခြင်းကို လိုက်နာပါ။ ညာကွေ့လျှင် အဆင့်နှစ်ဆင့်ဖြင့် ညာကွေ့ခြင်းကို လုပ်ပါ။"],
+   ["夜はライトをつける。お酒を飲んだら乗らない","ညဘက်တွင် မီးဖွင့်ပါ။ အရက်သောက်ပြီးလျှင် မစီးပါနှင့်။"],
+   ["ヘルメットをかぶる。自転車保険に入る","ဟယ်လ်မက် ဆောင်းပါ။ စက်ဘီး အာမခံ ဝင်ပါ။"],
+   ["ながらスマホ1万2千円、逆走・信号無視6千円","ဖုန်းကိုင်စီးခြင်း 12,000 ယန်း၊ ပြောင်းပြန်စီးခြင်းနှင့် မီးပွိုင့်ချိုးခြင်း 6,000 ယန်း။"]
+  ],
+  nJa:"最後にまとめです。自転車安全利用五則をもう一度確認しましょう。車道が原則で、左側を通ります。歩道は例外で、歩行者を優先します。交差点では信号と一時停止を守り、右折は二段階右折です。夜はライトをつけます。お酒を飲んだら乗りません。ヘルメットをかぶります。ながらスマホは反則金1万2千円、逆走や信号無視は6千円です。私たちの会社の理念は、一人はすべてのために、すべては一人のためにです。自分と仲間と町の人の命を守るために、毎日ルールを守って安全に走りましょう。",
+  nMy:"နောက်ဆုံး အနှစ်ချုပ် ဖြစ်ပါသည်။ စက်ဘီး ဘေးကင်းစွာ အသုံးပြုရန် စည်းကမ်း 5 ချက်ကို ထပ်မံ စစ်ဆေးကြပါစို့။ ကားလမ်းကို အခြေခံ၍ ဘယ်ဘက်မှ သွားပါ။ လူသွားလမ်းသည် ခြွင်းချက် ဖြစ်ပြီး လမ်းလျှောက်သူကို ဦးစားပေးပါ။ လမ်းဆုံတွင် မီးပွိုင့်နှင့် ခဏရပ်တန့်ခြင်းကို လိုက်နာပြီး ညာကွေ့လျှင် အဆင့်နှစ်ဆင့်ဖြင့် ညာကွေ့ခြင်းကို လုပ်ပါ။ ညဘက်တွင် မီးဖွင့်ပါ။ အရက်သောက်ပြီးလျှင် မစီးပါနှင့်။ ဟယ်လ်မက် ဆောင်းပါ။ ဖုန်းကိုင်စီးခြင်းသည် ဒဏ်ကြေး 12,000 ယန်း၊ ပြောင်းပြန်စီးခြင်းနှင့် မီးပွိုင့်ချိုးခြင်းသည် 6,000 ယန်း ဖြစ်ပါသည်။ ကျွန်ုပ်တို့ ကုမ္ပဏီ၏ ခံယူချက်မှာ တစ်ဦးသည် အားလုံးအတွက်၊ အားလုံးသည် တစ်ဦးအတွက် ဖြစ်ပါသည်။ မိမိ၊ လုပ်ဖော်ကိုင်ဖက်များနှင့် မြို့သူမြို့သားများ၏ အသက်ကို ကာကွယ်ရန် နေ့စဉ် စည်းကမ်းကို လိုက်နာပြီး ဘေးကင်းစွာ စီးကြပါစို့။"
+ }
+});
+
+// ===== スライドの順番と注意点 =====
+const SLIDE_ORDER = ['b_cover','b_rule5','b_vehicle','b_left','b_lane','b_roadside','b_sidewalk1','b_sidewalk2','b_signal','b_stop','b_cross','b_right','b_crosswalk','b_rail','b_hand','b_sumaho','b_alcohol','b_ban','b_night','b_danger1','b_danger2','b_danger3','b_side','b_aokippu','b_helmet','b_check','b_insurance','b_child','b_park','b_accident','b_end'];
+const NOTES = [
+ ['このアプリ（研修スライド・イラスト・音声・画面の構成を含む）は、株式会社ミストラルサービスの財産です。無断での転載・複製・改変・再配布を禁止します。',
+  'ဤအက်ပ်သည် Mistral Service ကုမ္ပဏီ၏ ပိုင်ဆိုင်မှု ဖြစ်သည်။ ခွင့်ပြုချက်မရှိဘဲ ကူးယူခြင်း၊ ပြင်ဆင်ခြင်း၊ ပြန်လည်ဖြန့်ဝေခြင်း မပြုရ။'],
+ ['URL・QRコード・画面写真を、社外の人やSNSに共有しないでください。当社の研修の目的以外では使わないでください。',
+  'URL၊ QR ကုဒ်နှင့် screenshot များကို ကုမ္ပဏီပြင်ပ လူများ သို့မဟုတ် SNS တွင် မမျှဝေရ။ ကုမ္ပဏီ၏ သင်တန်းအတွက်သာ အသုံးပြုပါ။'],
+ ['内容は2026年10月時点の法令・警察庁「自転車ルールブック」にもとづいています。法律が変わることがあります。保険や子どもを乗せるルールなど、都道府県・市町村で違うものがあります。',
+  'အကြောင်းအရာများသည် ၂၀၂၆ ခုနှစ် အောက်တိုဘာလ အချိန်ရှိ ဥပဒေများကို အခြေခံသည်။ ဥပဒေ ပြောင်းလဲနိုင်သည်။ အာမခံ၊ ကလေးတင်ခြင်း စသည်တို့သည် ဒေသအလိုက် ကွာခြားနိုင်သည်။'],
+ ['ミャンマー語の訳は、母語話者の確認がまだ済んでいません。わかりにくいところは職員に聞いてください。',
+  'မြန်မာဘာသာပြန်ကို မိခင်ဘာသာစကားပြောသူ၏ စစ်ဆေးမှု မပြီးသေးပါ။ နားလည်ရခက်ပါက ဝန်ထမ်းကို မေးပါ။'],
+ ['パソコンでは Microsoft Edge でインターネットにつなぐと読み上げます（文章だけがMicrosoftの音声サービスに送られます。氏名は送りません）。受講の記録はこの端末の中にだけ残ります。',
+  'PC တွင် Microsoft Edge နှင့် အင်တာနက်ဖြင့် အသံဖြင့်ဖတ်ပါမည်။ မှတ်တမ်းကို ဤစက်ထဲတွင်သာ သိမ်းသည်။']
+];
+
+// ===== 日本の自転車ルール 研修（スライド＋音声。テストなし） =====
+const UI = {
+  title:['日本の自転車ルール 研修','ဂျပန်နိုင်ငံ စက်ဘီးစည်းကမ်း သင်တန်း'],
+  sub:['株式会社ミストラルサービス　絵と音声で学ぶ','Mistral Service Co., Ltd.　ပုံနှင့်အသံဖြင့် လေ့လာခြင်း'],
+  guide:['📖 使い方','📖 အသုံးပြုနည်း'], home:['🏠 ホーム','🏠 ပင်မ'],
+  start:['はじめに','စတင်ရန်'], name:['氏名','အမည်'], rate:['読む速さ','ဖတ်နှုန်း'],
+  howto:['「▶ 研修をはじめる」を押すと、絵と音声のスライドが自動で進みます。下の「目次」から見たいスライドだけを見ることもできます。',
+         '「▶ သင်တန်း စတင်မည်」 ကို နှိပ်ပါ။ ပုံနှင့်အသံပါသော စာမျက်နှာများ အလိုအလျောက် ဆက်သွားပါမည်။ အောက်ရှိ 「မာတိကာ」 မှ ကြည့်လိုသော စာမျက်နှာကိုလည်း ရွေးကြည့်နိုင်သည်။'],
+  ks:['🚲 研修（日本の自転車ルール）','🚲 သင်တန်း (ဂျပန်နိုင်ငံ စက်ဘီးစည်းကမ်း)'],
+  ksP:['日本で自転車に乗るときのルール・通行方法・注意点を、絵と音声で学びます。','ဂျပန်တွင် စက်ဘီးစီးရာတွင် လိုက်နာရမည့် စည်းကမ်း၊ သွားလာနည်းနှင့် သတိပြုရန်အချက်များကို ပုံနှင့်အသံဖြင့် လေ့လာပါမည်။'],
+  ksStart:['▶ 研修をはじめる','▶ သင်တန်း စတင်မည်'], ksResume:['▶ 続きから見る','▶ ဆက်ကြည့်မည်'], ksAgain:['↺ 最初から','↺ အစမှ'],
+  ksDoneL:['受講済','ကြည့်ပြီး'], ksNot:['未受講','မကြည့်ရသေး'],
+  ksPlay:['▶ 再生','▶ ဖွင့်'], ksPause:['⏸ 一時停止','⏸ ခဏရပ်'], ksAuto:['自動で次へ','အလိုအလျောက် ရှေ့ဆက်'],
+  prev:['◀ 前へ','◀ ယခင်'], next:['次へ ▶','ရှေ့သို့ ▶'],
+  ksEndT:['研修おつかれさまでした','သင်တန်း ပြီးဆုံးပါပြီ'],
+  ksEndP:['ルールを守って、安全に自転車に乗りましょう。わからないことは職員に聞いてください。','စည်းကမ်းကို လိုက်နာ၍ ဘေးကင်းစွာ စက်ဘီးစီးကြပါစို့။ မသိသည်များကို ဝန်ထမ်းကို မေးပါ။'],
+  toc:['目次（見たいスライドを選べます）','မာတိကာ (ကြည့်လိုသော စာမျက်နှာကို ရွေးနိုင်သည်)'],
+  notes:['⚠ 注意点（はじめに読んでください）','⚠ သတိပြုရန်အချက်များ (အရင်ဆုံး ဖတ်ပါ)'],
+  needName:['氏名を入力してください','အမည်ကို ရိုက်ထည့်ပါ'], close:['閉じる','ပိတ်မည်'],
+  mobSave:['','']
+};
+const COMPANY = { ja:'株式会社ミストラルサービス', en:'Mistral Service Co., Ltd.' };
+const RINEN = { head:'Good Person Good Company',
+  ja:'私たちは素晴らしい人、素晴らしい仲間を目指します。～一人はすべてのために、すべては一人のために～',
+  my:'ကျွန်ုပ်တို့သည် ကောင်းမွန်သောလူ၊ ကောင်းမွန်သော အပေါင်းအဖော်များ ဖြစ်ရန် ကြိုးစားပါသည်။ ～တစ်ယောက်က အားလုံးအတွက်၊ အားလုံးက တစ်ယောက်အတွက်～' };
+function rinenHtml(){ return '<div class="rinen"><div class="rn-co">'+(LANG==='my'? esc(COMPANY.en) : esc(COMPANY.ja)+(LANG==='both'?' ('+esc(COMPANY.en)+')':''))+'</div><div class="rn-head">'+(LANG!=='my'?'企業理念　':'')+esc(RINEN.head)+'</div>'+(LANG!=='my'?'<div>'+esc(RINEN.ja)+'</div>':'')+(LANG!=='ja'?'<div class="my">'+esc(RINEN.my)+'</div>':'')+'</div>'; }
+
+let view='home';
+function show(v){ view=v; ['home','kenshu'].forEach(n=>$('v_'+n).classList.toggle('hide', n!==v)); window.scrollTo(0,0); }
+function nameNow(){ return $('name').value.trim(); }
+function fmtDate(t){ const d=new Date(t); return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+function notesHtml(){ return '<ol class="notes">'+NOTES.map(n=>'<li>'+(LANG!=='my'?'<div>'+esc(n[0])+'</div>':'')+(LANG!=='ja'?'<div class="my">'+esc(n[1])+'</div>':'')+'</li>').join('')+'</ol>'; }
+
+// ===== 研修の再生 =====
+const KS_ORDER = SLIDE_ORDER;
+const KS_N = KS_ORDER.length;
+let ksIdx=0, ksPlaying=false, ksTimer=null, ksEnd=false;
+function ksKey(){ return nameNow() || '_'; }
+function ksDone(name){ const d=load('ksDone',{}); return d[name||ksKey()]||''; }
+function ksPos(){ const p=load('ksPos',{}); return p[ksKey()]||0; }
+function ksSavePos(i){ const p=load('ksPos',{}); p[ksKey()]=i; store('ksPos',p); }
+function renderKenshuCard(){
+  const done=ksDone(), pos=ksPos();
+  $('ksCard').innerHTML='<h2>'+T('ks')+'</h2><p class="muted">'+T('ksP')+'（'+KS_N+'枚）</p>'+
+    '<div class="row"><span class="passb '+(done?'p':'f')+'" style="font-size:15px">'+(done? T('ksDoneL')+' '+esc(done) : T('ksNot'))+'</span></div>'+
+    '<div class="row">'+(pos>0&&pos<KS_N-1? '<button class="btn" id="ksResumeBtn">'+T('ksResume')+'（'+(pos+1)+'/'+KS_N+'）</button><button class="btn sub" id="ksStartBtn">'+T('ksAgain')+'</button>'
+      : '<button class="btn" id="ksStartBtn">'+T('ksStart')+'</button>')+'</div>';
+  $('ksStartBtn').onclick=()=>ksOpen(0);
+  if($('ksResumeBtn')) $('ksResumeBtn').onclick=()=>ksOpen(pos);
+}
+function renderToc(){
+  $('h_toc').innerHTML=T('toc');
+  $('tocBox').innerHTML=KS_ORDER.map((id,i)=>{ const t=SLIDE_TEXT[id]||{tJa:id,tMy:''};
+    return '<button class="cat" style="text-align:left;cursor:pointer" data-goto="'+i+'"><span class="t">'+(i+1)+'. '+(LANG!=='my'?esc(t.tJa):'')+'</span>'+(LANG!=='ja'?'<div class="my" style="font-size:13px">'+esc(t.tMy)+'</div>':'')+'</button>'; }).join('');
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-goto]'); if(b) ksOpen(+b.dataset.goto); const l=e.target.closest('[data-l]'); if(l){ LANG=l.dataset.l; store('lang',LANG); applyLang(); } });
+function ksOpen(i){
+  if(!nameNow()){ toast(T('needName')); $('name').focus(); return; }
+  store('name', nameNow()); ksIdx=i; ksEnd=false; show('kenshu'); ksPlaying=true; ksRender();
+}
+function ksClose(){ ksPlaying=false; clearTimeout(ksTimer); stopSpeak(); }
+function ksStopped(){ clearTimeout(ksTimer); }
+const ksSent=t=>t.match(/[^。။!?！？]+[。။!?！？]*/g)||[t];
+function ksParts(t,id){ const out=[]; langsToRead().forEach(l=>{ const txt=l==='ja'?t.nJa:t.nMy, ss=ksSent(txt); out.push({lang:l,text:txt,caps:ss,clips:ss.map((_,i)=>'s:'+id+':'+l+':'+i)}); }); return out; }
+function ksRender(){
+  clearTimeout(ksTimer);
+  $('ksPrev').innerHTML=T('prev'); $('ksNext').innerHTML=T('next'); $('l_ksAuto').innerHTML=T('ksAuto');
+  if(ksEnd){ ksRenderEnd(); return; }
+  const id=KS_ORDER[ksIdx], t=SLIDE_TEXT[id]||{tJa:id,tMy:'',pts:[],nJa:'',nMy:''};
+  $('ksNo').textContent=(ksIdx+1)+' / '+KS_N; $('ksTitle').innerHTML='';
+  $('ksBar').style.width=((ksIdx+1)/KS_N*100)+'%';
+  $('ksSlide').innerHTML='<div class="ks-img">'+(IL[id]||'')+'</div><div class="ks-pts">'+((ksIdx===0||ksIdx===KS_N-1)?rinenHtml():'')+'<h2>'+(LANG!=='my'?esc(t.tJa):'')+(LANG!=='ja'?'<span class="my">'+esc(t.tMy)+'</span>':'')+'</h2><ul>'+
+    t.pts.map(p=>'<li>'+(LANG!=='my'?'<div>'+esc(p[0])+'</div>':'')+(LANG!=='ja'?'<div class="my">'+esc(p[1])+'</div>':'')+'</li>').join('')+'</ul></div>';
+  $('ksPrev').disabled = ksIdx===0; $('ksCap').innerHTML='';
+  ksSavePos(ksIdx); ksUpdPlay();
+  if(ksPlaying) ksSpeak();
+}
+function ksSpeak(){
+  const id=KS_ORDER[ksIdx], t=SLIDE_TEXT[id]; if(!t) return; const my=ksIdx;
+  speak(ksParts(t,id), ()=>{ if(!ksPlaying||my!==ksIdx||view!=='kenshu') return;
+      if($('ksAutoNext').checked) ksTimer=setTimeout(()=>{ if(ksPlaying&&my===ksIdx&&view==='kenshu') ksGo(1,true); },1500);
+      else { ksPlaying=false; ksUpdPlay(); } },
+    (text,lang)=>{ $('ksCap').innerHTML = lang==='my'? '<span class="my">'+esc(text)+'</span>' : esc(text); });
+}
+function ksGo(d,auto){ clearTimeout(ksTimer); stopSpeak(); if(d>0&&ksIdx>=KS_N-1){ ksFinish(); return; } ksIdx=Math.max(0,Math.min(KS_N-1,ksIdx+d)); if(!auto) ksPlaying=true; ksRender(); }
+function ksFinish(){
+  const d=load('ksDone',{}); d[ksKey()]=fmtDate(Date.now()); store('ksDone',d);
+  ksSavePos(0); ksEnd=true; ksPlaying=false; ksRenderEnd();
+  const parts=[]; langsToRead().forEach(l=>parts.push(l==='ja'?{lang:'ja',text:'研修おつかれさまでした。ルールを守って、安全に自転車に乗りましょう。',clips:['ksend:ja']}:{lang:'my',text:'သင်တန်း ပြီးဆုံးပါပြီ။ စည်းကမ်းကို လိုက်နာ၍ ဘေးကင်းစွာ စက်ဘီးစီးကြပါစို့။',clips:['ksend:my']}));
+  speak(parts);
+}
+function ksRenderEnd(){
+  $('ksNo').textContent=KS_N+' / '+KS_N; $('ksBar').style.width='100%'; $('ksCap').innerHTML='';
+  $('ksSlide').innerHTML='<div class="ks-end" style="grid-column:1/-1"><h2>✅ '+T('ksEndT')+'</h2><p>'+T('ksEndP')+'</p>'+rinenHtml()+'<div class="row" style="justify-content:center;margin-top:16px">'+
+    '<button class="btn" id="ksHomeBtn">'+T('home')+'</button><button class="btn gray" id="ksAgainBtn">'+T('ksAgain')+'</button></div></div>';
+  $('ksHomeBtn').onclick=()=>{ ksClose(); renderHome(); show('home'); };
+  $('ksAgainBtn').onclick=()=>ksOpen(0);
+  $('ksPrev').disabled=false; ksUpdPlay();
+}
+function ksUpdPlay(){ $('ksPlayBtn').innerHTML = ksPlaying? T('ksPause') : T('ksPlay'); $('ksPlayBtn').disabled=ksEnd; }
+
+function renderHome(){
+  document.body.classList.toggle('both', LANG==='both');
+  $('rinenBox').innerHTML=rinenHtml();
+  $('h_start').innerHTML=T('start'); $('l_name').innerHTML=T('name'); $('l_rate').innerHTML=T('rate'); $('p_howto').innerHTML=T('howto');
+  $('h_notes').innerHTML=T('notes'); $('notesBody').innerHTML=notesHtml();
+  renderKenshuCard(); renderToc();
+}
+function applyLang(){
+  document.querySelectorAll('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
+  $('appTitle').innerHTML = T('title')+'<small>'+T('sub')+'</small>';
+  $('guideBtn').innerHTML=T('guide'); $('homeBtn').innerHTML=T('home');
+  document.body.classList.toggle('both', LANG==='both');
+  if(view==='home') renderHome(); else if(view==='kenshu'){ stopSpeak(); ksRender(); }
+}
+function guideHtml(){
+  const g=[['はじめに','စတင်ရန်','このファイル（またはQRコードのページ）を開き、氏名を入れ、右上で言語を選びます。スマホは最初に一度画面をタップすると音が出ます。','ဖွင့်ပြီး အမည် ရိုက်ထည့်ကာ ဘာသာစကား ရွေးပါ။'],
+    ['研修を見る','သင်တန်းကြည့်ရန်','「▶ 研修をはじめる」で自動再生。⏸で一時停止、◀▶で前後へ。キーボードの ← → とスペースも使えます。','「▶ သင်တန်း စတင်မည်」 – ⏸ ခဏရပ်၊ ◀▶ ယခင်/ရှေ့သို့။'],
+    ['見たい所だけ見る','လိုသည်ကိုသာ ကြည့်ရန်','ホームの「目次」からスライドを選べます。','ပင်မစာမျက်နှာ၏ 「မာတိကာ」 မှ ရွေးပါ။'],
+    ['音声が出ないとき','အသံမထွက်လျှင်','パソコンは Microsoft Edge＋インターネット接続で七海・ニーラーの声。スマホ版は録音を再生します（Wi-Fi推奨）。','PC – Edge နှင့် အင်တာနက်။ ဖုန်း – Wi-Fi ဖြင့် ဖွင့်ပါ။']];
+  return '<h2>📖 '+T('guide').replace('📖 ','')+'</h2>'+g.map(x=>'<h3>'+(LANG!=='my'?esc(x[0]):'')+(LANG==='both'?' / ':'')+(LANG!=='ja'?'<span class="my">'+esc(x[1])+'</span>':'')+'</h3>'+(LANG!=='my'?'<p>'+esc(x[2])+'</p>':'')+(LANG!=='ja'?'<p class="my">'+esc(x[3])+'</p>':'')).join('')+
+    '<div style="text-align:right;margin-top:12px"><button class="btn" id="infoClose">'+T('close')+'</button></div>';
+}
+$('guideBtn').onclick=()=>{ $('infoBox').innerHTML=guideHtml(); $('infoClose').onclick=()=>$('infoModal').classList.remove('on'); $('infoModal').classList.add('on'); };
+$('infoModal').onclick=e=>{ if(e.target.id==='infoModal') $('infoModal').classList.remove('on'); };
+$('homeBtn').onclick=()=>{ if(view==='kenshu') ksClose(); renderHome(); show('home'); };
+$('name').addEventListener('input',()=>{ store('name',nameNow()); renderKenshuCard(); });
+$('rate').onchange=()=>store('rate',$('rate').value);
+$('ksPrev').onclick=()=>{ if(ksEnd){ ksEnd=false; ksIdx=KS_N-1; ksPlaying=true; ksRender(); return; } ksGo(-1); };
+$('ksNext').onclick=()=>{ if(ksEnd) return; ksGo(1); };
+$('ksPlayBtn').onclick=()=>{ if(ksPlaying){ ksPlaying=false; clearTimeout(ksTimer); stopSpeak(); ksUpdPlay(); } else { ksPlaying=true; ksUpdPlay(); ksSpeak(); } };
+document.addEventListener('keydown',e=>{ if(view!=='kenshu'||e.target.tagName==='INPUT') return;
+  if(e.key==='ArrowRight') $('ksNext').click(); else if(e.key==='ArrowLeft') $('ksPrev').click(); else if(e.key===' '){ e.preventDefault(); $('ksPlayBtn').click(); } });
+(function init(){
+  $('name').value=load('name',''); $('rate').value=load('rate','1');
+  applyLang(); pickVoices(); show('home');
+  if(!load('notesSeen',false)){ $('notesBox').open=true; store('notesSeen',true); }
+})();
+</script>
+<script>if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }</script>
+</body>
+</html>
